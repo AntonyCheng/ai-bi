@@ -1,13 +1,17 @@
-# Docker 镜像构建
-FROM maven:3.8.1-jdk-8-slim as builder
+FROM openjdk:11
+LABEL maintainer="AntonyCheng"
 
-# Copy local code to the container image.
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+ENV PARAMS=""
 
-# Build a release artifact.
-RUN mvn package -DskipTests
+ENV TZ=PRC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Run the web service on container startup.
-CMD ["java","-jar","/app/target/springboot-init-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+WORKDIR /opt/spring-boot-init-template
+
+COPY target/spring-boot-init-template-*.jar /opt/spring-boot-init-template/app.jar
+
+VOLUME ["/opt/spring-boot-init-template"]
+
+EXPOSE 38080
+
+CMD ["sh","-c","java -jar $JAVA_OPTS /opt/spring-boot-init-template/app.jar $PARAMS"]

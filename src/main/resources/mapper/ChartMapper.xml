@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wf.aibi.mapper.ChartMapper">
-    <resultMap id="BaseResultMap" type="com.wf.aibi.model.entity.Chart">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="goal" column="goal" jdbcType="VARCHAR"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="chartData" column="chartData" jdbcType="VARCHAR"/>
-        <result property="chartType" column="chartType" jdbcType="VARCHAR"/>
-        <result property="genChart" column="genChart" jdbcType="VARCHAR"/>
-        <result property="genResult" column="genResult" jdbcType="VARCHAR"/>
-        <result property="userId" column="userId" jdbcType="BIGINT"/>
-        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
-        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.sharehome.springbootinittemplate.mapper.ChartMapper">
+    <resultMap id="BaseResultMap" type="top.sharehome.springbootinittemplate.model.entity.Chart">
+        <!--@mbg.generated-->
+        <!--@Table ai_bi.t_chart-->
+        <id column="chart_id" jdbcType="BIGINT" property="id"/>
+        <result column="chart_name" jdbcType="VARCHAR" property="name"/>
+        <result column="chart_goal" jdbcType="LONGVARCHAR" property="goal"/>
+        <result column="chart_chart_data" jdbcType="LONGVARCHAR" property="chartData"/>
+        <result column="chart_chart_type" jdbcType="VARCHAR" property="chartType"/>
+        <result column="chart_gen_chart" jdbcType="LONGVARCHAR" property="genChart"/>
+        <result column="chart_gen_result" jdbcType="LONGVARCHAR" property="genResult"/>
+        <result column="chart_user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
     </resultMap>
-
     <sql id="Base_Column_List">
-        id,
-        name,
-        goal,
-        chartData,
-        chartType,
-        genChart,
-        genResult,
-        userId,
-        createTime,
-        updateTime,
-        isDelete
+        <!--@mbg.generated-->
+        chart_id,
+        chart_name,
+        chart_goal,
+        chart_chart_data,
+        chart_chart_type,
+        chart_gen_chart,
+        chart_gen_result,
+        chart_user_id,
+        create_time,
+        update_time,
+        is_deleted
     </sql>
 </mapper>

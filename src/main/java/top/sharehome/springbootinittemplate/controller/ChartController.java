@@ -18,7 +18,7 @@ import top.sharehome.springbootinittemplate.model.dto.chart.ChartQueryDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
 import top.sharehome.springbootinittemplate.model.entity.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
-import top.sharehome.springbootinittemplate.service.impl.ChartService;
+import top.sharehome.springbootinittemplate.service.ChartService;
 import top.sharehome.springbootinittemplate.utils.chat.ChatUtils;
 import top.sharehome.springbootinittemplate.utils.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;

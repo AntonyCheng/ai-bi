@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import top.sharehome.springbootinittemplate.mapper.ChartMapper;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
+import top.sharehome.springbootinittemplate.service.ChartService;
 
 /**
  * @author admin

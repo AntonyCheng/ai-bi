@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.sharehome</groupId>
-    <artifactId>spring-boot-init-template</artifactId>
+    <artifactId>ai-bi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-init-template</name>
-    <description>spring-boot-init-template</description>
+    <name>ai-bi</name>
+    <description>ai-bi</description>
     <properties>
         <!-- Java相关 -->
         <java.version>11</java.version>

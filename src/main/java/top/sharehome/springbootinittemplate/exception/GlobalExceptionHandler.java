@@ -11,7 +11,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
@@ -29,7 +28,6 @@ import javax.validation.ValidationException;
  *
  * @author AntonyCheng
  */
-@ResponseBody
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -247,22 +245,10 @@ public class GlobalExceptionHandler {
     public R<Void> handleBindException(BindException e) {
         log.error(e.getMessage(), e);
         String message = e.getAllErrors().get(0).getDefaultMessage();
-        return R.fail(HttpStatus.WARN, message);
+        return R.fail(HttpStatus.BAD_REQUEST, message);
     }
 
     // todo 第一个todo中的异常均为自定义异常，抛出的错误码被包含在ReturnCode枚举类中
-
-    /**
-     * 自定义数据库事务异常
-     *
-     * @param e 异常
-     * @return 返回结果
-     */
-    @ExceptionHandler(CustomizeTransactionException.class)
-    public R<String> handleCustomizeTransactionException(CustomizeTransactionException e) {
-        log.error(e.getMessage(), e);
-        return R.fail(e.getReturnCode());
-    }
 
     /**
      * 自定义返回异常
@@ -300,8 +286,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(CustomizeLockException.class)
     public R<String> handleCustomizeLockException(CustomizeLockException e) {
-        log.error(e.getMessage(), e);
-        return R.fail(e.getReturnCode());
+        log.error(e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg(), e);
+        int code = e.getReturnCode().getCode();
+        String msg = e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg();
+        return R.fail(code, msg);
     }
 
     /**
@@ -312,6 +300,34 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(CustomizeMailException.class)
     public R<String> handleCustomizeMailException(CustomizeMailException e) {
+        log.error(e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg(), e);
+        int code = e.getReturnCode().getCode();
+        String msg = e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg();
+        return R.fail(code, msg);
+    }
+
+    /**
+     * 自定义Excel异常
+     *
+     * @param e 异常
+     * @return 返回结果
+     */
+    @ExceptionHandler(CustomizeExcelException.class)
+    public R<String> handleCustomizeExcelException(CustomizeExcelException e) {
+        log.error(e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg(), e);
+        int code = e.getReturnCode().getCode();
+        String msg = e.getMsg() == null ? e.getReturnCode().getMsg() : e.getMsg();
+        return R.fail(code, msg);
+    }
+
+    /**
+     * 自定义数据库事务异常
+     *
+     * @param e 异常
+     * @return 返回结果
+     */
+    @ExceptionHandler(CustomizeTransactionException.class)
+    public R<String> handleCustomizeTransactionException(CustomizeTransactionException e) {
         log.error(e.getMessage(), e);
         return R.fail(e.getReturnCode());
     }

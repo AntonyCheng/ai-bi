@@ -1,15 +1,18 @@
 # 服务概况 ---- 可自定义
 server:
+  # 项目端口
   port: 38080
   servlet:
+    # 项目基础URI
     context-path: /api
+  # 开启Http2，使其能够进行多路复用
   http2:
     enabled: true
-  # 选择undertow服务器配置
+  # 选择Undertow服务器配置
   undertow:
     # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
     max-http-post-size: -1
-    # tomcat的URI编码
+    # Undertow的URI编码
     url-charset: UTF-8
     # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
     # 每块buffer的空间大小,越小的空间被利用越充分
@@ -19,22 +22,23 @@ server:
     threads:
       # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
       io: 16
-      # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+      # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, Undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
       worker: 256
-  # 选择tomcat服务器配置
+  # 选择Tomcat服务器配置
   tomcat:
-    # tomcat的URI编码
+    # Tomcat的URI编码
     uri-encoding: UTF-8
     # 连接数满后的排队数，默认为100
     accept-count: 1000
     threads:
-      # tomcat最大线程数，默认为200
+      # Tomcat最大线程数，默认为200
       max: 800
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
-# knife4j的增强配置，不需要增强可以不配
+# Knife4j的增强配置，不需要增强可以不配
 knife4j:
+  # 是否打开Knife4j的增强配置
   enable: true
   # todo 是否开启生产环境保护（由于拿到模板就需要二次开发，所以默认开发环境，即预先关闭）
   production: false
@@ -43,13 +47,13 @@ knife4j:
     enable-footer: true
     enable-footer-custom: true
     footer-custom-content: Apache License 2.0 | Copyright &copy; 2024 [AntonyCheng](https://github.com/AntonyCheng)
-  # basic验证
+  # Basic验证
   basic:
-    # todo 是否让页面带有basic验证（如果只是查看api推荐打开，但是如果要在里面调试，推荐关闭，因为basic验证之后会占用请求头的Authorization字段，会导致需要登录验证的接口调用失败，预先关闭）
+    # todo 是否让页面带有Basic验证（如果只是查看api推荐打开，但是如果要在里面调试，推荐关闭，因为basic验证之后会占用请求头的Authorization字段，会导致需要登录验证的接口调用失败，预先关闭）
     enable: false
-    username: antony
-    password: antony123456
-# springdoc-openapi项目配置
+    username: admin
+    password: admin123456
+# SpringDoc-OpenAPI项目配置
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -68,6 +72,10 @@ logging:
   level:
     top.sharehome: debug
     org.springframework: warn
+    org.apache.poi: info
+    com.alibaba.excel: info
+    # 防止MongoDB无效警告
+    org.springframework.data.convert: error
 
 # 纳入SpringBootAdmin监控体系
 management:
@@ -91,29 +99,76 @@ management:
 
 # 公共配置文件
 spring:
-  # 国际化配置
-  messages:
-    # todo 是否启动国际化功能（预先关闭）
-    enable: false
-    # 解释：i18n是存放多语言文件目录，messages是文件前缀
-    basename: i18n/messages
-  # 配置SpringBootAdmin项目所在地址
+  # 项目前置工作 ---- 可自定义
+  application:
+    # 定义项目名称
+    name: spring-boot-init-template
+  # 项目启动 Banner 设置
+  banner:
+    # Banner 编码
+    charset: UTF-8
+    # Banner 路径
+    location: classpath:banner.txt
+  # 配置SpringBootAdmin
   boot:
     admin:
       client:
         # todo 是否纳入SpringBootAdmin监控体系（预先关闭）
         enabled: false
-        url: http://localhost:38078/spring-boot-admin
+        # SpringBootAdmin地址
+        url: http://127.0.0.1:38077/spring-boot-admin/
+        # SpringBootAdmin账号
         username: admin
+        # SpringBootAdmin密码
         password: admin123456
+        # 实例配置
         instance:
+          # 指定服务实例在注册到Admin服务器时提供给服务器的是IP地址而不是其他类型的主机名（如DNS名称）
           service-host-type: ip
+          # 指定Admin界面显示的实例名称
           name: ${spring.application.name}
-  # 项目前置工作 ---- 可自定义
-  application:
-    name: spring-boot-init-template
+          # 指定客户端应用的服务基础URL，当Admin Server需要调用客户端应用的actuator端点或其他API时，会使用这个URL作为前缀
+          service-base-url: http://127.0.0.1:38080
+  # 国际化配置
+  messages:
+    # todo 是否启动国际化功能（预先关闭）
+    enable: false
+    # 默认语言
+    default-locale: zh_cn
+    # 解释：I18n是存放多语言文件目录，messages是文件前缀
+    basename: i18n/messages
+    # 指定国际化文件编码格式
+    encoding: UTF-8
+    # 设置国际化消息缓存有效时间，单位是秒
+    cache-duration: 3600
+    # 找不到与用户区域设置匹配的消息时，将退回系统默认区域设置
+    fallback-to-system-locale: true
+    # 当找不到对应的消息键时，决定是否使用键值本身作为消息返回
+    use-code-as-default-message: false
+  # 模板工具配置
   freemarker:
+    # todo 是否启动FreeMarker模板引擎
+    enabled: false
+    # 设置是否检查模板文件路径是否存在
     check-template-location: false
+    # 指定查找FreeMarker模板文件的路径
+    template-loader-path: classpath:/templates/freemarker/
+    # 定义模板文件的后缀名，ftl是FreeMarker模板的标准扩展名
+    suffix: .ftl
+    # 设置模板文件的字符集编码
+    charset: UTF-8
+    # 在模型（Model）中设置一个属性名称，以便在模板中可以访问到HttpServletRequest对象。这里设置为request，意味着在模板中可以通过${request}来访问请求上下文信息
+    request-context-attribute: request
+    # 自定义设置
+    settings:
+      # 浮点数格式
+      number_format: 0.##########
+      # 日期和时间格式
+      datetime_format: yyyy-MM-dd HH:mm:ss
+      # 日期格式
+      date_format: yyyy-MM-dd
+      # 时间格式
+      time_format: HH:mm:ss
   # 文件上传 ---- 可自定义
   servlet:
     multipart:
@@ -121,43 +176,13 @@ spring:
       max-file-size: 10MB
       # 设置总上传的文件大小
       max-request-size: 20MB
-  # 支持 swagger3
+  # 设置Spring MVC路径匹配策略，ant_path_matcher格式：/api/**/subApi/{param}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   # 不允许bean的定义被覆盖，保证系统稳定，但是某些情况下可能需要反其道而行之，这个由开发者自己定义，默认关闭
   main:
     allow-bean-definition-overriding: false
-  # rabbitmq配置
-  rabbitmq:
-    # todo 是否开启RabbitMQ（预先关闭）
-    enable: false
-    # 获取消息最大等待时间（单位：毫秒）
-    max-await-timeout: 3000
-    # 单机 RabbitMQ IP（单价模式配置和集群模式配置只能存在一个）
-    host: xxx.xxx.xxx.xxx
-    # 单机 RabbitMQ 端口
-    port: 25671
-    # 集群RabbitMQ（单价模式配置和集群模式配置只能存在一个）
-    #addresses: xxx.xxx.xxx.xxx:25672,xxx.xxx.xxx.xxx:25673,xxx.xxx.xxx.xxx:25674
-    # 虚拟主机
-    virtual-host: /
-    # 用户名
-    username: admin
-    # 密码
-    password: admin123456
-    # 消息确认（ACK）
-    publisher-confirm-type: correlated #确认消息已发送到交换机(Exchange)
-    publisher-returns: true #确认消息已发送到队列(Queue)
-    template:
-      mandatory: true
-    # 是否手动ACK
-    listener:
-      type: simple
-      direct:
-        acknowledge-mode: manual
-      simple:
-        acknowledge-mode: manual
   # 邮件配置
   mail:
     # todo 是否开启邮件功能（这里的邮件功能指的是模板内增强的邮件工具，预先关闭）
@@ -174,19 +199,64 @@ spring:
     default-encoding: UTF-8
     # 邮箱通讯协议
     protocol: smtp
+  # RabbitMQ配置
+  rabbitmq:
+    # todo 是否开启RabbitMQ（预先关闭）
+    enable: false
+    # 获取消息最大等待时间（单位：毫秒）
+    max-await-timeout: 3000
+    # 单机 RabbitMQ IP（单价模式配置和集群模式配置只能存在一个）
+    host: 127.0.0.1
+    # 单机 RabbitMQ 端口
+    port: 5672
+    # 集群RabbitMQ（单价模式配置和集群模式配置只能存在一个）
+    #addresses: 127.0.0.1:5672,127.0.0.1:5673,127.0.0.1:5674
+    # 虚拟主机
+    virtual-host: /
+    # 用户名
+    username: guest
+    # 密码
+    password: guest
+    # 消息确认（ACK）
+    publisher-confirm-type: correlated #确认消息已发送到交换机(Exchange)
+    publisher-returns: true #确认消息已发送到队列(Queue)
+    template:
+      mandatory: true
+    # 是否手动ACK
+    listener:
+      type: simple
+      direct:
+        acknowledge-mode: manual
+      simple:
+        acknowledge-mode: manual
   # 框架依赖自动配置选择
   autoconfigure:
     exclude:
+      # todo 是否开启MongoDB依赖类（如果要启用MongoDB，就将MongoAutoConfiguration注释掉，该配置类一旦被注释，就需要设置MongoDB相关配置，预先关闭）
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       # todo 是否使用DruidCP连接池（如果要使用Druid连接池，就将DruidDataSourceAutoConfigure注释掉，然后记得查看spring.datasource.druid相关配置和提示，预先不使用）
       - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
-      # todo 是否开启Redis依赖类（如果要打开Redis配置，就将RedisAutoConfiguration注释掉，该配置类一旦被注释，就需要设置redis相关配置，预先关闭）
+      # todo 是否开启Redis依赖类（如果要启动Redis，就将RedisAutoConfiguration注释掉，该配置类一旦被注释，就需要设置Redis相关配置，预先关闭）
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       # todo 是否使用Redis搭配SaToken鉴权认证（如果需要，就将RedisAutoConfiguration和SaTokenDaoRedisJackson注释掉，预先不使用）
       - cn.dev33.satoken.dao.SaTokenDaoRedisJackson
-  # mysql配置
+  data:
+    # MongoDB配置
+    mongodb:
+      # 主机地址
+      host: 127.0.0.1
+      # 主机端口
+      port: 27017
+      # 默认数据库
+      database: init_db
+      # MongoDB用户名（考虑是否需要用户名）
+      #username:
+      # MongoDB密码（考虑是否需要密码）
+      #password:
+  # MySQL配置
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-    url: jdbc:shardingsphere:classpath:mysql.yaml
+    url: jdbc:shardingsphere:classpath:mysql/mysql.yaml
     # HikariCP连接池配置（性能较好，模板首选【dataSourceClassName: com.zaxxer.hikari.HikariDataSource】）
     hikari:
       # 连接池名称
@@ -197,11 +267,15 @@ spring:
       maximum-pool-size: 25
       # 配置连接超时时间
       connection-timeout: 30000
+      # 多久检查一次连接的活性（单位：毫秒，小于30000即不进行活性检查，默认不检查连接活性）
+      keepalive-time: 0
+      # 校验超时时间（单位毫秒）
+      validation-timeout: 5000
       # 控制从池返回的连接的默认自动提交行为，默认值：true
       auto-commit: true
       # 空闲连接存活最大时间，默认10分钟
       idle-timeout: 600000
-      # 池中连接的最长生命周期，值0表示无限生命周期，设置30分钟
+      # 池中连接的最长生命周期，值0表示无限生命周期，默认设置30分钟
       max-lifetime: 1800000
       # 配置检测连接是否有效
       connection-test-query: SELECT 1 FROM DUAL
@@ -222,7 +296,7 @@ spring:
       # 配置网络超时时间
       socket-timeout: 60000
       # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒，设置10分钟
-      time-between-eviction-runs-millis: 600000
+      time-between-eviction-runs-millis: 30000
       # 配置一个连接在池中最小生存的时间，单位是毫秒，设置10分钟
       min-evictable-idle-time-millis: 600000
       # 配置一个连接在池中最大生存的时间，单位是毫秒，设置30分钟
@@ -234,21 +308,21 @@ spring:
       test-on-return: false
       web-stat-filter:
         enabled: true
-  # 系统缓存redis配置（这里的redis配置主要用于鉴权认证等模板自带服务的系统缓存服务）
+  # 系统缓存Redis配置（这里的Redis配置主要用于鉴权认证等模板自带服务的系统缓存服务）
   redis:
     # 单机地址（单价模式配置和集群模式配置只能存在一个）
-    host: xxx.xxx.xxx.xxx
+    host: 127.0.0.1
     # 单机端口，默认为6379
-    port: 26378
+    port: 6379
     # 集群地址（单价模式配置和集群模式配置只能存在一个）
     #cluster:
     #  nodes:
-    #    - xxx.xxx.xxx.xxx:16379
-    #    - xxx.xxx.xxx.xxx:16380
-    #    - xxx.xxx.xxx.xxx:16381
-    #    - xxx.xxx.xxx.xxx:16382
-    #    - xxx.xxx.xxx.xxx:16383
-    #    - xxx.xxx.xxx.xxx:16384
+    #    - 127.0.0.1:6379
+    #    - 127.0.0.1:6380
+    #    - 127.0.0.1:6381
+    #    - 127.0.0.1:6382
+    #    - 127.0.0.1:6383
+    #    - 127.0.0.1:6384
     # 数据库索引
     database: 0
     # 密码（考虑是否需要密码）
@@ -267,7 +341,7 @@ spring:
         # 最大等待时间/ms
         max-wait: 3000
 
-# redisson配置（这里的redisson配置主要用来系统业务逻辑的缓存服务）
+# Redisson配置（这里的Redisson配置主要用来系统业务逻辑的缓存服务）
 # 如果同时开启单机版本和集群版本，只有单机版本生效
 redisson:
   # 线程池数量
@@ -280,12 +354,12 @@ redisson:
   limit-rate: 2
   # 每个操作所要消耗的令牌数，系统分发的令牌数一定要大于等于操作消耗的令牌树，不然会报错
   limit-permits: 1
-  # redis单机版本
+  # Redis单机版本
   single-server-config:
     # todo 是否启动单机Redis（Redisson）缓存（预先关闭）
     enable-single: false
     # 单机地址（一定要在redis协议下）
-    address: redis://xxx.xxx.xxx.xxx:26378
+    address: redis://127.0.0.1:6379
     # 数据库索引
     database: 1
     # 密码（考虑是否需要密码）
@@ -300,18 +374,18 @@ redisson:
     connection-pool-size: 32
     # 连接空闲超时，单位：毫秒
     idle-connection-timeout: 10000
-  # redis集群版本
+  # Redis集群版本
   cluster-servers-config:
     # todo 是否启动集群redisson（Redisson）缓存（预先关闭）
     enable-cluster: false
-    # redis集群节点（一定要在redis协议下）
+    # Redis集群节点（一定要在Redis协议下）
     node-addresses:
-      - redis://xxx.xxx.xxx.xxx:26379
-      - redis://xxx.xxx.xxx.xxx:26380
-      - redis://xxx.xxx.xxx.xxx:26381
-      - redis://xxx.xxx.xxx.xxx:26382
-      - redis://xxx.xxx.xxx.xxx:26383
-      - redis://xxx.xxx.xxx.xxx:26384
+      - redis://127.0.0.1:6379
+      - redis://127.0.0.1:6380
+      - redis://127.0.0.1:6381
+      - redis://127.0.0.1:6382
+      - redis://127.0.0.1:6383
+      - redis://127.0.0.1:6384
     # 密码（考虑是否需要密码）
     #password: 123456
     # master最小空闲连接数
@@ -342,16 +416,80 @@ caffeine:
   # 是否允许空值null作为缓存的value
   allow-null-value: true
 
+# 对象存储配置
+oss:
+  # 腾讯云COS配置
+  tencent:
+    # todo 是否开启（预先关闭）
+    enable: false
+    # 地域
+    region: ap-xxxxxxxx
+    # 用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+    secret-id: xxxxxxxx
+    # 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+    secret-key: xxxxxxxx
+    # 桶名称
+    bucket-name: xxxxxxxx
+  # MinIO OSS配置
+  minio:
+    # todo 是否开启（预先关闭）
+    enable: false
+    # 域名（格式：【ip:port】）
+    endpoint: 127.0.0.1:9000
+    # 是否开启TLS
+    enable-tls: false
+    # 用户的 SecretId
+    secret-id: xxxxxxxx
+    # 用户的 SecretKey
+    secret-key: xxxxxxxx
+    # 桶名称
+    bucket-name: xxxxxxxx
+  # 阿里云OSS配置
+  ali:
+    # todo 是否开启（预先关闭）
+    enable: false
+    # 域名 以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
+    endpoint: https://oss-xx-xxx.aliyuncs.com
+    # 用户的 SecretId
+    secret-id: xxxxxxxx
+    # 用户的 SecretKey
+    secret-key: xxxxxxxx
+    # 桶名称
+    bucket-name: xxxxxxxx
+
+# WebSocket配置
+websocket:
+  # todo 是否开启（预先关闭）
+  enable: false
+  # websocket服务端口
+  port: 39999
+  # BOSS线程组线程数
+  boss-thread: 4
+  # WORKER线程组线程数
+  worker-thread: 16
+
 # Easy-ES配置
 easy-es:
   # todo 是否启动（预先关闭）
   enable: false
   # es连接地址+端口 格式必须为ip:port,如果是集群则可用逗号隔开
-  address: xxx.xxx.xxx.xxx:29200
+  address: 127.0.0.1:9200
   # 如果无账号密码则可不配置此行
   #username:
   # 如果无账号密码则可不配置此行
   #password:
+  # 多数据源
+  #dynamic:
+    #datasource:
+      #ds1:
+        #address: 127.0.0.1:9201
+        # 如果无账号密码则可不配置此行
+        #username:
+        # 如果无账号密码则可不配置此行
+        #password:
+        #...（以下配置和单数据源类似）
+      #ds2:
+        #...（以下配置和ds1相似）
   # 默认为http 可缺省
   schema: http
   # 默认为true 打印banner 若您不期望打印banner,可配置为false
@@ -384,51 +522,13 @@ easy-es:
       map-underscore-to-camel-case: false
       # 索引前缀,可用于区分环境  默认为空 用法和MP的tablePrefix一样的作用和用法
       index-prefix: template_
-      # id生成策略 customize为自定义,id值由用户生成,比如取MySQL中的数据id,如缺省此项配置,则id默认策略为es自动生成
-      id-type: customize
+      # id生成策略
+      # 1、customize为自定义，_id值由用户生成，比如取MySQL中的数据id，如缺省此项配置，则_id默认策略为ES自动生成
+      # 2、none为默认策略，由ES自动生成id
+      # 3、uuid为全局唯一策略
+      id-type: none
       # 数据刷新策略,默认为不刷新,若对数据时效性要求比较高,可以调整为immediate,但性能损耗高,也可以调整为折中的wait_until
       refresh-policy: immediate
-
-# 对象存储配置
-oss:
-  # 腾讯云COS配置
-  tencent:
-    # todo 是否开启（预先关闭）
-    enable: false
-    # 地域
-    region: ap-xxxxxxxx
-    # 用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
-    secret-id: xxxxxxxx
-    # 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
-    secret-key: xxxxxxxx
-    # 桶名称
-    bucket-name: xxxxxxxx
-  # MinIO OSS配置
-  minio:
-    # todo 是否开启（预先关闭）
-    enable: false
-    # 域名（格式：【ip:port】）
-    endpoint: xxx.xxx.xxx.xxx:9000
-    # 是否开启TLS
-    enable-tls: false
-    # 用户的 SecretId
-    secret-id: xxxxxxxx
-    # 用户的 SecretKey
-    secret-key: xxxxxxxx
-    # 桶名称
-    bucket-name: xxxxxxxx
-  # 阿里云OSS配置
-  ali:
-    # todo 是否开启（预先关闭）
-    enable: false
-    # 域名 以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
-    endpoint: https://oss-xx-xxx.aliyuncs.com
-    # 用户的 SecretId
-    secret-id: xxxxxxxx
-    # 用户的 SecretKey
-    secret-key: xxxxxxxx
-    # 桶名称
-    bucket-name: xxxxxxxx
 
 #配置SpringBoot任务调度
 schedule:
@@ -443,37 +543,56 @@ schedule:
     # 线程池大小（开启则必填）
     thread-pool: 10
 
-# Xxl-Job配置（如果是导入了模板sql，那么登录账号/密码为：admin/123456）
+# XxlJob配置（如果是导入了模板sql，那么登录账号/密码为：admin/123456）
 xxl:
   job:
     # todo 是否开启（预先关闭）
     enable: false
     # Xxl-Job监控面板地址
-    admin-addresses: http://localhost:38079/xxl-job-admin
+    admin-addresses: http://127.0.0.1:38079/xxl-job-admin
     # Xxl-Job token
     access-token: xxl-job
     # 执行器配置
     executor:
       # 执行器AppName：执行器心跳注册分组依据；为空则关闭自动注册
       appname: xxl-job-executor
-      # 执行器端口号 执行器从38080开始往后写
+      # 执行器端口号
       port: 38081
       # 执行器注册：默认IP:PORT（appname不为空，该处则可为空）
       address:
       # 执行器IP：默认自动获取IP（appname不为空，该处则可为空）
       ip:
       # 执行器运行日志文件存储磁盘路径
-      logpath: ./logs/${spring.application.name}/xxl-job
+      logpath: ./logs/xxl-logs/xxl-job
       # 执行器日志文件保存天数：大于3生效
       logretentiondays: 30
 
+# PowerJob配置
+powerjob:
+  worker:
+    # todo 是否开启（预先关闭）
+    enabled: false
+    # 是否允许延迟连接PowerJob服务器（即没有连接上服务器是否终止程序启动）
+    allow-lazy-connect-server: false
+    # 执行器端口
+    port: 38082
+    # 执行器AppName
+    app-name: power-job-executor
+    # PowerJob服务器地址
+    server-address: 127.0.0.1:38078
+    # 网络传输协议
+    protocol: http
+    # 执行器信息存储介质
+    store-strategy: disk
+    # 处理任务返回结果最大长度
+    max-result-length: 4096
+    max-appended-wf-context-length: 4096
+
 # Sa-Token配置
 sa-token:
-  # todo 是否开启鉴权（不开启鉴权就意味SaCheckRole和SaCheckPermission失效，预先开启）
-  enable-authorization: true
-  # todo 是否开启认证（不开启认证就意味着所有接口无论是否使用Sa-Token注解，均开放，预先开启）
-  enable-identification: true
-  # todo 是否使用jwt（建议如果没有开启redis配置就不要开启jwt，预先关闭）
+  # todo 是否启用SaToken认证鉴权功能（此处为false并不是禁用SaToken，而是让SaToken相关注解失效，预先开启）
+  enable-sa: true
+  # todo 是否使用JWT（建议如果没有开启redis配置就不要开启jwt，预先关闭）
   enable-jwt: false
   # token名称 (同时也是cookie名称)
   token-name: Authorization
@@ -483,7 +602,7 @@ sa-token:
   # token最低活跃时间 (指定时间无操作就过期) 单位: 秒
   active-timeout: 1800
   # Same-Token的有效期 (单位: 秒)(默认一天）
-  # same-token-timeout: 600
+  #same-token-timeout: 600
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
   is-concurrent: false
   # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
@@ -494,7 +613,7 @@ sa-token:
   # 是否尝试从cookie里读取token
   is-read-cookie: true
   # token前缀（这个需要从前端修改后传入进来）
-  # token-prefix: "Bearer"
+  #token-prefix: "Bearer"
   # jwt秘钥
   jwt-secret-key: spring-boot-init-template
   # 开启日志
@@ -516,6 +635,13 @@ captcha:
   char-length: 4
   # 验证码存活时间（单位：秒）
   expired: 180
+
+# 离线IP库配置
+ip2region:
+  # todo 是否启用离线IP
+  enable: false
+  # 数据加载方式
+  load-type: memory
 
 # MyBatisPlus配置
 # https://baomidou.com/config/
@@ -558,5 +684,5 @@ mybatis-plus:
 # 赋能AI
 yuapi:
   client:
-    access-key: oaa6uvm1r92y9rkcnk9ro5yu1p9s6bwt
-    secret-key: 4nryze3njsb1l0qyd5buxyvje3dy584g
+    access-key: xx
+    secret-key: xx

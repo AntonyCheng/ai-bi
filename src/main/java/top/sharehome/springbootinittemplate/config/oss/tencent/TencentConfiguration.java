@@ -72,7 +72,7 @@ public class TencentConfiguration {
                 suffix = "." + suffix;
             }
             // 创建一个随机文件名称
-            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis()  + suffix;
+            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis() + suffix;
             // 对象键(Key)是对象在存储桶中的唯一标识。
             key = StringUtils.isBlank(StringUtils.trim(rootPath)) ? fileName : rootPath + "/" + fileName;
             // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
@@ -130,7 +130,7 @@ public class TencentConfiguration {
                 suffix = "." + suffix;
             }
             // 创建一个随机文件名称
-            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis()  + suffix;
+            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis() + suffix;
             // 对象键(Key)是对象在存储桶中的唯一标识。
             key = StringUtils.isBlank(StringUtils.trim(rootPath)) ? fileName : rootPath + "/" + fileName;
             // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
@@ -188,7 +188,7 @@ public class TencentConfiguration {
                 suffix = "." + suffix;
             }
             // 创建一个随机文件名称
-            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis()  + suffix;
+            String fileName = UUID.randomUUID().toString().replaceAll("-", "") + System.currentTimeMillis() + suffix;
             // 对象键(Key)是对象在存储桶中的唯一标识。
             key = StringUtils.isBlank(StringUtils.trim(rootPath)) ? fileName : rootPath + "/" + fileName;
             // 使用高级接口必须先保证本进程存在一个 TransferManager 实例，如果没有则创建
@@ -258,6 +258,8 @@ public class TencentConfiguration {
         // 这里建议设置使用 https 协议
         // 从 5.6.54 版本开始，默认使用了 https
         clientConfig.setHttpProtocol(HttpProtocol.https);
+        // 禁止打印关闭时的堆栈信息，绝大多数场景下是无效信息
+        clientConfig.setPrintShutdownStackTrace(false);
         // 生成 cos 客户端并且上传文件
         return new COSClient(cred, clientConfig);
     }
@@ -286,7 +288,7 @@ public class TencentConfiguration {
         // 分块上传阈值和分块大小分别为 3MB 和 1MB
         TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
         transferManagerConfiguration.setMultipartUploadThreshold(3 * 1024 * 1024);
-        transferManagerConfiguration.setMinimumUploadPartSize(1 * 1024 * 1024);
+        transferManagerConfiguration.setMinimumUploadPartSize(1024 * 1024);
         transferManager.setConfiguration(transferManagerConfiguration);
 
         return transferManager;
@@ -334,7 +336,7 @@ public class TencentConfiguration {
      */
     @PostConstruct
     private void initDi() {
-        log.info("############ {} Configuration DI.", this.getClass().getSimpleName());
+        log.info("############ {} Configuration DI.", this.getClass().getSimpleName().split("\\$\\$")[0]);
     }
 
 }

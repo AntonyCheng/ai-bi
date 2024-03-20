@@ -2,6 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- 项目概况 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -10,62 +12,103 @@
     </parent>
     <groupId>top.sharehome</groupId>
     <artifactId>ai-bi</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>ai-bi</name>
     <description>ai-bi</description>
+    <url>https://github.com/AntonyCheng/ai-bi</url>
+    <inceptionYear>2023</inceptionYear>
+
+    <!-- 项目开源许可证 -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <!-- 开发者概况 -->
+    <developers>
+        <developer>
+            <id>AntonyCheng</id>
+            <name>WuChengCheng</name>
+            <email>1911261716@qq.com</email>
+            <roles>
+                <role>Owner</role>
+            </roles>
+            <timezone>GMT+8</timezone>
+        </developer>
+    </developers>
+
+    <!-- 项目版本控制 -->
+    <scm>
+        <connection>https://github.com/AntonyCheng/ai-bi.git</connection>
+        <developerConnection>
+            scm:git:ssh://git@github.com:AntonyCheng/ai-bi.git
+        </developerConnection>
+        <url>https://github.com/AntonyCheng/ai-bi</url>
+    </scm>
+
+    <!-- 依赖版本控制 -->
     <properties>
         <!-- Java相关 -->
         <java.version>11</java.version>
+        <!-- SpringBoot相关 -->
+        <spring.boot.version>2.7.18</spring.boot.version>
+        <!-- Netty相关 -->
+        <netty.version>4.1.107.Final</netty.version>
         <!-- MySQL相关 -->
         <mysql.version>8.0.33</mysql.version>
-        <druid.starter.version>1.2.20</druid.starter.version>
-        <mybatis.plus.version>3.5.4.1</mybatis.plus.version>
+        <druid.starter.version>1.2.22</druid.starter.version>
+        <mybatis.plus.starter.version>3.5.5</mybatis.plus.starter.version>
         <shardingsphere.version>5.3.2</shardingsphere.version>
         <!-- 工具类相关 -->
         <lombok.version>1.18.30</lombok.version>
-        <hutool.version>5.8.23</hutool.version>
+        <hutool.version>5.8.26</hutool.version>
         <commons.lang3.version>3.14.0</commons.lang3.version>
-        <commons.io.version>2.15.0</commons.io.version>
+        <commons.io.version>2.15.1</commons.io.version>
         <commons.codec.version>1.16.0</commons.codec.version>
         <commons.pool2.version>2.12.0</commons.pool2.version>
         <commons.collections4.version>4.4</commons.collections4.version>
-        <commons.math.version>3.6.1</commons.math.version>
+        <commons.math3.version>3.6.1</commons.math3.version>
         <ok.http3.version>4.12.0</ok.http3.version>
-        <ok.io.version>3.6.0</ok.io.version>
+        <ok.io.version>3.7.0</ok.io.version>
         <ip2region.version>2.7.0</ip2region.version>
-        <knife4j.version>4.1.0</knife4j.version>
-        <fastjson2.version>2.0.42</fastjson2.version>
+        <knife4j.openapi3.starter.version>4.5.0</knife4j.openapi3.starter.version>
+        <fastjson2.version>2.0.47</fastjson2.version>
         <!-- 权限校验相关 -->
         <sa.token.version>1.37.0</sa.token.version>
         <!-- 缓存相关 -->
-        <redisson.version>3.24.3</redisson.version>
+        <redisson.version>3.27.2</redisson.version>
         <caffeine.version>3.1.8</caffeine.version>
         <!-- ElasticSearch相关 -->
         <elasticsearch.version>7.14.0</elasticsearch.version>
         <logstash.logback.version>7.3</logstash.logback.version>
-        <easy.es.version>2.0.0-beta4</easy.es.version>
+        <easy.es.starter.version>2.0.0-beta6</easy.es.starter.version>
         <!-- 对象存储相关 -->
-        <tencent.cos.version>5.6.187</tencent.cos.version>
-        <ali.oss.version>3.17.2</ali.oss.version>
+        <tencent.cos.version>5.6.205</tencent.cos.version>
+        <ali.oss.version>3.17.4</ali.oss.version>
         <ali.jaxb.version>2.3.1</ali.jaxb.version>
         <ali.activation.version>1.1.1</ali.activation.version>
-        <minio.version>8.5.7</minio.version>
+        <minio.version>8.5.9</minio.version>
         <!-- 文件操作相关 -->
         <poi.version>5.2.5</poi.version>
-        <easy.excel.version>3.3.2</easy.excel.version>
-        <itext.version>7.2.5</itext.version>
+        <easy.excel.version>3.3.4</easy.excel.version>
+        <itext.version>8.0.3</itext.version>
         <!-- 外部平台相关 -->
         <xxl.job.version>2.4.0</xxl.job.version>
-        <spring.boot.admin.version>2.7.4</spring.boot.admin.version>
-        <!-- 其他（和业务无关，但是能够确保系统稳定性） -->
+        <power.job.version>4.3.9</power.job.version>
+        <spring.boot.admin.client.version>2.7.9</spring.boot.admin.client.version>
+        <canal.version>1.1.7</canal.version>
+        <!-- 其他（确保系统稳定性，主要是因为ShardingSphere框架中ElasticJob使用了旧版本SnakeYAML的API，目前无法对其进行升级） -->
+        <!-- 据说ShardingSphere5.5.0会对其进行修复，这也是为什么该模板不选择升级ShardingSphere5.4.x，而一直沿用ShardingSphere5.3.2的原因之一 -->
         <snakeyaml.version>1.33</snakeyaml.version>
+        <!-- 插件版本 -->
+        <maven.compiler.plugin.verison>3.13.0</maven.compiler.plugin.verison>
     </properties>
+
+    <!-- 依赖详情 -->
     <dependencies>
         <!-- SpringBoot 依赖配置 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -77,7 +120,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- web 容器使用 undertow 性能更强（若要使用Undertow，必须将上方的Tomcat排除掉） -->
+        <!-- Web 容器使用 Undertow 性能更强（若要使用Undertow，必须将上方的Tomcat排除掉） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
@@ -95,14 +138,24 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,16 +163,23 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- MySQL 依赖配置（搭配shardingsphere 5.2.1-5.3.2 一起使用，druid版本控制在1.2.16以下，这种搭配主要是想完成数据库加密、主从库和分库分表的操作，后续会继续更新） -->
+        <!-- Netty依赖配置 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis.plus.version}</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
         </dependency>
+
+        <!-- MySQL 依赖配置（搭配shardingsphere 5.2.1-5.3.2 一起使用，druid版本控制在1.2.16以下，这种搭配主要是想完成数据库加密、主从库和分库分表的操作，后续会继续更新） -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis.plus.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
@@ -139,14 +199,14 @@
             <version>${lombok.version}</version>
         </dependency>
 
-        <!-- hutool 依赖配置-->
+        <!-- Hutool 依赖配置-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
 
-        <!-- apache common 依赖配置 -->
+        <!-- Apache Commons 依赖配置 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -175,18 +235,44 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
-            <version>${commons.math.version}</version>
+            <version>${commons.math3.version}</version>
+        </dependency>
+
+        <!-- Ok Http 依赖配置 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${ok.http3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>${ok.io.version}</version>
+        </dependency>
+
+        <!-- Fast JSON 依赖配置 -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+
+        <!-- 离线 IP 地址定位库 ip2region 依赖配置-->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>${ip2region.version}</version>
         </dependency>
 
         <!-- Sa-Token 依赖配置（该初始化模板提供session+cookie和redis+token两种方式，此处依赖配置是redis+token，所以必须保证redis可用） -->
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-core</artifactId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
             <version>${sa.token.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <artifactId>sa-token-core</artifactId>
             <version>${sa.token.version}</version>
         </dependency>
         <dependency>
@@ -200,29 +286,31 @@
             <version>${sa.token.version}</version>
         </dependency>
 
-        <!-- redis 依赖配置 -->
+        <!-- Redis 依赖配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-        <!-- 缓存依赖配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
+        <!-- Redisson 依赖配置 -->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
             <version>${redisson.version}</version>
         </dependency>
+
+        <!-- Caffeine 依赖配置 -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
             <version>${caffeine.version}</version>
         </dependency>
 
-        <!-- rabbitMQ 依赖配置 -->
+        <!-- RabbitMQ 依赖配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
@@ -233,17 +321,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- logstash 依赖配置 -->
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>${logstash.logback.version}</version>
-        </dependency>
-        <!-- ES 依赖配置 -->
+        <!-- Elastic Search 依赖配置 -->
         <dependency>
             <groupId>org.dromara.easy-es</groupId>
             <artifactId>easy-es-boot-starter</artifactId>
-            <version>${easy.es.version}</version>
+            <version>${easy.es.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch</groupId>
@@ -252,13 +334,14 @@
         </dependency>
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>${elasticsearch.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
             <version>${elasticsearch.version}</version>
+        </dependency>
+        <!-- Logstash 依赖配置 -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.logback.version}</version>
         </dependency>
 
         <!-- 腾讯云 COS 依赖配置 -->
@@ -318,71 +401,79 @@
         <!-- PDF 操作依赖配置 -->
         <dependency>
             <groupId>com.itextpdf</groupId>
-            <artifactId>itext7-core</artifactId>
+            <artifactId>itext-core</artifactId>
             <version>${itext.version}</version>
             <type>pom</type>
         </dependency>
 
-        <!-- 邮件依赖配置 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
-        <!-- XXL-JOB分布式定时任务依赖配置 -->
+        <!-- XXL-JOB 分布式定时任务依赖配置 -->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
             <version>${xxl.job.version}</version>
         </dependency>
 
-        <!-- SpringBootAdmin监控平台依赖配置 -->
+        <!-- PowerJob 分布式任务调度依赖配置 -->
+        <dependency>
+            <groupId>tech.powerjob</groupId>
+            <artifactId>powerjob-worker-spring-boot-starter</artifactId>
+            <version>${power.job.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tech.powerjob</groupId>
+            <artifactId>powerjob-official-processors</artifactId>
+            <version>${power.job.version}</version>
+        </dependency>
+
+        <!-- Spring Boot Admin 监控平台依赖配置 -->
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-client</artifactId>
-            <version>${spring.boot.admin.version}</version>
+            <version>${spring.boot.admin.client.version}</version>
         </dependency>
 
-        <!-- okHttp 依赖配置 -->
+        <!-- Canal 客户端依赖配置 -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${ok.http3.version}</version>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>${canal.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.squareup.okio</groupId>
-            <artifactId>okio</artifactId>
-            <version>${ok.io.version}</version>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.common</artifactId>
+            <version>${canal.version}</version>
         </dependency>
-
-        <!-- 离线IP地址定位库 ip2region 依赖配置-->
         <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>ip2region</artifactId>
-            <version>${ip2region.version}</version>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.protocol</artifactId>
+            <version>${canal.version}</version>
         </dependency>
 
-        <!-- knife4j 依赖配置 -->
+        <!-- Knife4j 依赖配置 -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
+            <version>${knife4j.openapi3.starter.version}</version>
         </dependency>
 
-        <!-- fastjson2 依赖配置 -->
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>${fastjson2.version}</version>
-        </dependency>
-
-        <!-- snakeyaml 依赖配置（用于保证系统稳定性） -->
+        <!-- Snakeyaml 依赖配置（用于保证系统稳定性） -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
         </dependency>
 
+        <!-- AI依赖 -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.3.8</version>
+        </dependency>
         <dependency>
             <groupId>com.yucongming</groupId>
             <artifactId>yucongming-java-sdk</artifactId>
@@ -390,22 +481,45 @@
         </dependency>
     </dependencies>
 
+    <!-- 项目构建概况 -->
     <build>
+        <!-- 构建插件 -->
         <plugins>
+            <!-- maven 打包 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <!-- 指定应用程序的入口类 -->
+                    <mainClass>top.sharehome.springbootinittemplate.MainApplication</mainClass>
+                    <!-- 指定打包的布局类型为 JAR -->
+                    <layout>JAR</layout>
+                    <!-- 生成可执行的 JAR 文件 -->
+                    <executable>true</executable>
+                    <!-- 添加资源到 JAR 文件中 -->
+                    <addResources>true</addResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.verison}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
 
+        <!-- 项目 resources 概况 -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -429,22 +543,24 @@
         </resources>
     </build>
 
+    <!-- 指定依赖仓库 -->
     <repositories>
         <repository>
             <id>public</id>
-            <name>huawei nexus</name>
-            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <name>aliyun maven</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
         </repository>
     </repositories>
 
+    <!-- 指定插件仓库 -->
     <pluginRepositories>
         <pluginRepository>
             <id>public</id>
-            <name>huawei nexus</name>
-            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <name>aliyun maven</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

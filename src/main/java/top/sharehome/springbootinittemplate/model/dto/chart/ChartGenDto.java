@@ -1,9 +1,14 @@
 package top.sharehome.springbootinittemplate.model.dto.chart;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.validate.PostGroup;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -12,7 +17,11 @@ import java.io.Serializable;
  * @author AntonyCheng
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class ChartGenDto implements Serializable {
+
     /**
      * 图表名称
      */
@@ -30,6 +39,12 @@ public class ChartGenDto implements Serializable {
      */
     @NotEmpty(message = "图表类型不能为空", groups = {PostGroup.class})
     private String chartType;
+
+    /**
+     * 图表文件
+     */
+    @NotNull(message = "文件不能为空", groups = {PostGroup.class})
+    private MultipartFile file;
 
     private static final long serialVersionUID = -8308107490110660374L;
 }

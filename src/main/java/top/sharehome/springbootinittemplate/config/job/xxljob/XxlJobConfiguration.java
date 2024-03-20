@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * XXL-JOB配置文件
- * 需要用到XXL-JOB时，先将visual/xxl-job-admin部署上
+ * 需要用到XXL-JOB时，先将module/xxl-job-admin部署上
  *
  * @author AntonyCheng
  */
@@ -39,7 +39,6 @@ public class XxlJobConfiguration {
         xxlJobSpringExecutor.setPort(executor.getPort());
         xxlJobSpringExecutor.setLogPath(executor.getLogpath());
         xxlJobSpringExecutor.setLogRetentionDays(executor.getLogretentiondays());
-        log.info(">>>>>>>>>>> xxl-job config init.");
         return xxlJobSpringExecutor;
     }
 
@@ -48,7 +47,7 @@ public class XxlJobConfiguration {
      */
     @PostConstruct
     private void initDi() {
-        log.info("############ {} Configuration DI.", this.getClass().getSimpleName());
+        log.info("############ {} Configuration DI.", this.getClass().getSimpleName().split("\\$\\$")[0]);
     }
 
 }

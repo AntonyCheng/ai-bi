@@ -191,7 +191,7 @@ public enum ReturnCode {
     /**
      * 系统文件地址异常 14009
      */
-    SYSTEM_FILE_ADDRESS_IS_ABNORMAL(14007, "系统文件地址异常"),
+    SYSTEM_FILE_ADDRESS_IS_ABNORMAL(14009, "系统文件地址异常"),
 
     /**
      * 邮件发送异常 15000
@@ -231,7 +231,12 @@ public enum ReturnCode {
     /**
      * 分布式锁设计出错 30005
      */
-    LOCK_DESIGN_ERROR(30005, "分布式锁设计出错");
+    LOCK_DESIGN_ERROR(30005, "分布式锁设计出错"),
+
+    /**
+     * 处理Excel文件出错 40000
+     */
+    EXCEL_FILE_ERROR(40000, "处理Excel文件出错");
 
     final private int code;
 

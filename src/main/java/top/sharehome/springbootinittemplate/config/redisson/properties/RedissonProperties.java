@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +52,7 @@ public class RedissonProperties {
     private ClusterServersConfig clusterServersConfig;
 
     /**
-     * 单例服务配置
+     * 单机服务配置
      */
     @Data
     @NoArgsConstructor

@@ -1,14 +1,12 @@
 package top.sharehome.springbootinittemplate.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 图标信息表
@@ -16,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "ai_bi.t_chart")
+@TableName(value = "t_chart")
 public class Chart implements Serializable {
     /**
      * id

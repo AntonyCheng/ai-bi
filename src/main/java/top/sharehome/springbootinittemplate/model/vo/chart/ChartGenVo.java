@@ -17,7 +17,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class ChartGenVo implements Serializable {
+
     private static final long serialVersionUID = -539879739760406303L;
+
     private String genChart;
+
     private String genResult;
+
 }

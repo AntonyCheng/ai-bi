@@ -1,5 +1,9 @@
+# 服务概况 ---- 可自定义
 server:
-  port: 38078
+  port: 38077
+  servlet:
+    context-path: /spring-boot-admin
+# 公共配置文件
 spring:
   application:
     name: spring-boot-admin
@@ -9,6 +13,6 @@ spring:
       password: admin123456
   boot:
     admin:
-      context-path: /spring-boot-admin
+      context-path: /
   thymeleaf:
     check-template-location: false

@@ -13,7 +13,6 @@ import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.base.Constants;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
@@ -44,15 +43,6 @@ import java.util.regex.Pattern;
 @Conditional(MailCondition.class)
 public class MailManager {
 
-    @Resource
-    private MailProperties mailProperties;
-
-    @Resource
-    private MailAsyncMethod mailAsyncMethod;
-
-    @Resource
-    private JavaMailSender javaMailSender;
-
     /**
      * 定义在邮件HTML中能够内嵌的图片后缀
      */
@@ -65,11 +55,16 @@ public class MailManager {
             put("ico", 5 * 1024 * 1024L);
         }
     };
-
     /**
      * 定义邮件附件总大小不超过50MB
      */
     private static final Long MAIL_ATTACHMENT_SIZE = 50 * 1024 * 1024L;
+    @Resource
+    private MailProperties mailProperties;
+    @Resource
+    private MailAsyncMethod mailAsyncMethod;
+    @Resource
+    private JavaMailSender javaMailSender;
 
     /**
      * 发送简单文本邮件
@@ -428,7 +423,7 @@ public class MailManager {
      */
     @PostConstruct
     private void initDi() {
-        log.info("############ {} Configuration DI.", this.getClass().getSimpleName());
+        log.info("############ {} Configuration DI.", this.getClass().getSimpleName().split("\\$\\$")[0]);
     }
 
 }

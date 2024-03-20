@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.base.R;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
+import top.sharehome.springbootinittemplate.common.validate.GetGroup;
+import top.sharehome.springbootinittemplate.common.validate.PostGroup;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartGenDto;
-import top.sharehome.springbootinittemplate.model.dto.chart.ChartQueryDto;
+import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
 import top.sharehome.springbootinittemplate.model.entity.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
@@ -44,37 +46,33 @@ public class ChartController {
 
     /**
      * 分页获取当前用户创建的资源列表
-     * todo 修改返回参数
      *
-     * @param chartQueryDto 分页查询Dto类
-     * @param pageModel     分页实体类
-     * @return
+     * @param chartPageDto 分页查询Dto类
+     * @return 分页结果
      */
-    @PostMapping("/user/list/page")
-    public R<Page<Chart>> listMyChartByPage(@Validated @RequestBody PageModel pageModel, @Validated @RequestBody ChartQueryDto chartQueryDto) {
-        chartQueryDto.setUserId(LoginUtils.getLoginUserId());
-        long page = pageModel.getPage();
-        long size = pageModel.getPageSize();
+    @PostMapping("/page")
+    public R<Page<Chart>> page(@Validated(GetGroup.class) @RequestBody ChartPageDto chartPageDto) {
+        chartPageDto.setUserId(LoginUtils.getLoginUserId());
+        long page = chartPageDto.getPage();
+        long size = chartPageDto.getSize();
         Page<Chart> chartPage = chartService.page(new Page<>(page, size),
-                getQueryWrapper(chartQueryDto));
+                getQueryWrapper(chartPageDto));
         return R.ok(chartPage);
     }
 
     /**
      * 智能分析
      *
-     * @param multipartFile
-     * @param chartGenDto
-     * @param request
-     * @return
+     * @param chartGenDto 图标生成Dto类
+     * @return 返回生成结果
      */
     @PostMapping("/gen")
-    public R<ChartGenVo> genChartByAi(@RequestPart("file") MultipartFile multipartFile, ChartGenDto chartGenDto, HttpServletRequest request) {
-        long size = multipartFile.getSize();
+    public R<ChartGenVo> genChartByAi(@Validated(PostGroup.class) ChartGenDto chartGenDto) {
+        long size = chartGenDto.getFile().getSize();
         if (size > 1024 * 1024) {
             throw new CustomizeReturnException(ReturnCode.USER_UPLOADED_FILE_IS_TOO_LARGE);
         }
-        String originalFilename = multipartFile.getOriginalFilename();
+        String originalFilename = chartGenDto.getFile().getOriginalFilename();
         String suffix = FileUtil.getSuffix(originalFilename);
         final List<String> validFileSuffixes = Arrays.asList("xlsx", "xls");
         if (!validFileSuffixes.contains(suffix)) {
@@ -91,7 +89,7 @@ public class ChartController {
         message.append("分析需求:").append("\n");
         message.append(goal).append("\n");
         message.append("原始数据:").append("\n");
-        String data = ExcelUtils.excelToCsv(multipartFile);
+        String data = ExcelUtils.excelToCsv(chartGenDto.getFile());
         message.append(data);
         String result = ChatUtils.doChat(modelId, message.toString());
         String[] split = result.split("##########");
@@ -121,19 +119,19 @@ public class ChartController {
     /**
      * 获取查询包装类
      *
-     * @param chartQueryDto
+     * @param chartPageDto
      * @return
      */
-    private LambdaQueryWrapper<Chart> getQueryWrapper(ChartQueryDto chartQueryDto) {
+    private LambdaQueryWrapper<Chart> getQueryWrapper(ChartPageDto chartPageDto) {
         LambdaQueryWrapper<Chart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if (chartQueryDto == null) {
+        if (chartPageDto == null) {
             return lambdaQueryWrapper;
         }
-        Long id = chartQueryDto.getId();
-        String name = chartQueryDto.getName();
-        String goal = chartQueryDto.getGoal();
-        String chartType = chartQueryDto.getChartType();
-        Long userId = chartQueryDto.getUserId();
+        Long id = chartPageDto.getId();
+        String name = chartPageDto.getName();
+        String goal = chartPageDto.getGoal();
+        String chartType = chartPageDto.getChartType();
+        Long userId = chartPageDto.getUserId();
         // 拼接查询条件
         lambdaQueryWrapper.like(StringUtils.isNotBlank(goal), Chart::getGoal, goal);
         lambdaQueryWrapper.like(StringUtils.isNotBlank(name), Chart::getName, name);

@@ -593,7 +593,7 @@ sa-token:
   # todo 是否启用SaToken认证鉴权功能（此处为false并不是禁用SaToken，而是让SaToken相关注解失效，预先开启）
   enable-sa: true
   # todo 是否使用JWT（建议如果没有开启redis配置就不要开启jwt，预先关闭）
-  enable-jwt: false
+  enable-jwt: true
   # token名称 (同时也是cookie名称)
   token-name: Authorization
   # token有效期 设为一天 (必定过期) 单位: 秒
@@ -611,7 +611,7 @@ sa-token:
   # 是否尝试从header里读取token
   is-read-header: true
   # 是否尝试从cookie里读取token
-  is-read-cookie: true
+  is-read-cookie: false
   # token前缀（这个需要从前端修改后传入进来）
   #token-prefix: "Bearer"
   # jwt秘钥
@@ -684,5 +684,5 @@ mybatis-plus:
 # 赋能AI
 yuapi:
   client:
-    access-key: xx
-    secret-key: xx
+    access-key: 9h6mitn7et5rt08yikpdeubj3rv8f7ii
+    secret-key: 5yqfgtnyev3pof0zq1oeiomh8gk60z7r

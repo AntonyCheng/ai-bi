@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: '基于AI的智能BI系统',
 
   /**
    * @type {boolean} true | false

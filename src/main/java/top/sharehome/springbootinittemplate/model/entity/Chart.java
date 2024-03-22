@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 
 /**
  * 图标信息表
+ *
+ * @author AntonyCheng
  */
 @Data
 @AllArgsConstructor
@@ -37,14 +39,14 @@ public class Chart implements Serializable {
     /**
      * 图标数据
      */
-    @TableField(value = "chart_chart_data")
-    private String chartData;
+    @TableField(value = "chart_data")
+    private String data;
 
     /**
      * 图表类型
      */
-    @TableField(value = "chart_chart_type")
-    private String chartType;
+    @TableField(value = "chart_type")
+    private String type;
 
     /**
      * 生成的图表数据
@@ -91,9 +93,9 @@ public class Chart implements Serializable {
 
     public static final String COL_CHART_GOAL = "chart_goal";
 
-    public static final String COL_CHART_CHART_DATA = "chart_chart_data";
+    public static final String COL_CHART_DATA = "chart_data";
 
-    public static final String COL_CHART_CHART_TYPE = "chart_chart_type";
+    public static final String COL_CHART_TYPE = "chart_type";
 
     public static final String COL_CHART_GEN_CHART = "chart_gen_chart";
 

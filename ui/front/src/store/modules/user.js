@@ -30,12 +30,12 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { account, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login({ account: account.trim(), password: password }).then(response => {
+        commit('SET_TOKEN', response.data.token)
+        setToken(response.data.token)
+        localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo))
         resolve()
       }).catch(error => {
         reject(error)
@@ -48,9 +48,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-
+        localStorage.setItem('userInfo', JSON.stringify(data))
         if (!data) {
-          return reject('Verification failed, please Login again.')
+          return reject('验证失败，请重新登录')
         }
 
         const { name, avatar } = data
@@ -69,6 +69,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
+        localStorage.removeItem('userInfo')
         resetRouter()
         commit('RESET_STATE')
         resolve()

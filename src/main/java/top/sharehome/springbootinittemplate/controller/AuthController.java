@@ -1,6 +1,7 @@
 package top.sharehome.springbootinittemplate.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.stp.StpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import top.sharehome.springbootinittemplate.service.AuthService;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 鉴权认证控制器
@@ -50,14 +53,20 @@ public class AuthController {
      * 用户登录
      *
      * @param authLoginDto 用户登录Dto类
-     * @return 返回登录用户信息
+     * @return 返回登录用户信息JWT
      */
     @PostMapping("/login")
     @EnableCaptcha
-    public R<AuthLoginVo> login(@RequestBody @Validated({PostGroup.class}) AuthLoginDto authLoginDto) {
+    public R<Map<String, Object>> login(@RequestBody @Validated({PostGroup.class}) AuthLoginDto authLoginDto) {
         AuthLoginVo loginUser = authService.login(authLoginDto);
         LoginUtils.login(loginUser);
-        return R.ok("登录成功", loginUser);
+        Map<String, Object> res = new HashMap<String, Object>() {
+            {
+                put("userInfo", loginUser);
+                put("token", StpUtil.getTokenValue());
+            }
+        };
+        return R.ok("登录成功", res);
     }
 
     /**

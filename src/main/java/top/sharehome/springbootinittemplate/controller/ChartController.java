@@ -9,7 +9,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.base.R;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.common.validate.GetGroup;
@@ -18,7 +17,6 @@ import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnE
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartGenDto;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
-import top.sharehome.springbootinittemplate.model.entity.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
 import top.sharehome.springbootinittemplate.service.ChartService;
 import top.sharehome.springbootinittemplate.utils.chat.ChatUtils;
@@ -26,7 +24,6 @@ import top.sharehome.springbootinittemplate.utils.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,10 +50,7 @@ public class ChartController {
     @PostMapping("/page")
     public R<Page<Chart>> page(@Validated(GetGroup.class) @RequestBody ChartPageDto chartPageDto) {
         chartPageDto.setUserId(LoginUtils.getLoginUserId());
-        long page = chartPageDto.getPage();
-        long size = chartPageDto.getSize();
-        Page<Chart> chartPage = chartService.page(new Page<>(page, size),
-                getQueryWrapper(chartPageDto));
+        Page<Chart> chartPage = chartService.pageChart(chartPageDto);
         return R.ok(chartPage);
     }
 
@@ -101,8 +95,8 @@ public class ChartController {
         Chart chart = new Chart();
         chart.setName(name);
         chart.setGoal(goal);
-        chart.setChartData(data);
-        chart.setChartType(chartType);
+        chart.setData(data);
+        chart.setType(chartType);
         chart.setGenChart(genChart);
         chart.setGenResult(genResult);
         chart.setUserId(LoginUtils.getLoginUserId());
@@ -135,7 +129,7 @@ public class ChartController {
         // 拼接查询条件
         lambdaQueryWrapper.like(StringUtils.isNotBlank(goal), Chart::getGoal, goal);
         lambdaQueryWrapper.like(StringUtils.isNotBlank(name), Chart::getName, name);
-        lambdaQueryWrapper.like(StringUtils.isNotBlank(chartType), Chart::getChartType, chartType);
+        lambdaQueryWrapper.like(StringUtils.isNotBlank(chartType), Chart::getType, chartType);
         lambdaQueryWrapper.eq(ObjectUtils.isNotEmpty(id) && id > 0, Chart::getId, id);
         lambdaQueryWrapper.eq(ObjectUtils.isNotEmpty(userId), Chart::getUserId, userId);
         return lambdaQueryWrapper;

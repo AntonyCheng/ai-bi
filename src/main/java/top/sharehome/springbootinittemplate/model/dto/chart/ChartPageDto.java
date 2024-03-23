@@ -24,12 +24,6 @@ import java.io.Serializable;
 public class ChartPageDto extends PageModel implements Serializable {
 
     /**
-     * id
-     */
-    @NotNull(message = "查询目标ID为空", groups = {GetGroup.class})
-    private Long id;
-
-    /**
      * 图表名称
      */
     private String name;
@@ -45,9 +39,9 @@ public class ChartPageDto extends PageModel implements Serializable {
     private String chartType;
 
     /**
-     * 用户id
+     * 用户账号
      */
-    private Long userId;
+    private String userAccount;
 
     private static final long serialVersionUID = -8211825557632072540L;
 }

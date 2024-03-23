@@ -1,10 +1,10 @@
 package top.sharehome.springbootinittemplate.utils.excel;
 
-import cn.hutool.core.collection.CollUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
@@ -22,6 +22,7 @@ import top.sharehome.springbootinittemplate.config.easyexcel.core.ExcelListener;
 import top.sharehome.springbootinittemplate.config.easyexcel.core.ExcelResult;
 import top.sharehome.springbootinittemplate.config.easyexcel.core.impl.DefaultExcelListener;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeExcelException;
+import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static cn.dev33.satoken.SaManager.log;
 
 /**
  * Excel工具类
@@ -48,8 +47,6 @@ public class ExcelUtils {
 
     /**
      * 转换为Csv
-     * @param multipartFile
-     * @return
      */
     public static String excelToCsv(MultipartFile multipartFile) {
         List<Map<Integer, String>> list = null;
@@ -61,9 +58,9 @@ public class ExcelUtils {
                     .doReadSync();
         } catch (IOException e) {
             log.error("文件异常");
-            e.printStackTrace();
+            throw new CustomizeReturnException(ReturnCode.FILE_UPLOAD_EXCEPTION);
         }
-        if (CollUtil.isEmpty(list)) {
+        if (CollectionUtils.isEmpty(list)) {
             return "";
         }
         StringBuilder sb = new StringBuilder();

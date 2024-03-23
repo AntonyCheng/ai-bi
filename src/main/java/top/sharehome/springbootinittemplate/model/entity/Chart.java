@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 图标信息表
+ * 图表信息表
  *
  * @author AntonyCheng
  */
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @TableName(value = "t_chart")
 public class Chart implements Serializable {
     /**
-     * id
+     * 图表ID
      */
     @TableId(value = "chart_id", type = IdType.ASSIGN_ID)
     private Long id;

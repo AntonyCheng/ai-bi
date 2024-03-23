@@ -20,8 +20,14 @@ public class ChartGenVo implements Serializable {
 
     private static final long serialVersionUID = -539879739760406303L;
 
+    /**
+     * 生成的图表
+     */
     private String genChart;
 
+    /**
+     * 生成的分析结果
+     */
     private String genResult;
 
 }

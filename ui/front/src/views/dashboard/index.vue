@@ -13,14 +13,14 @@
               <UploadAvatar />
             </el-col>
           </el-row>
-          <div class="userinfo-container">
+          <div v-if="userInfo" class="userinfo-container">
             <el-descriptions class="margin-top" title="用户信息" :column="1" :size="''" :border="true">
               <el-descriptions-item>
                 <template slot="label">
                   <i class="el-icon-user" />
                   用户名
                 </template>
-                {{ userInfo.account || userInfo.name }}
+                {{ (userInfo.account || userInfo.name) }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">

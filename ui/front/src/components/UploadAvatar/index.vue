@@ -2,14 +2,14 @@
   <div class="upload-container">
     <el-upload
       class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      action=""
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
       :http-request="submitUpload"
     >
-      <span class="avatar-container avatar">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <span v-if="userInfo" class="avatar-container avatar">
+        <img v-if="userInfo.avatar || imageUrl" :src="userInfo.avatar || imageUrl" class="avatar">
         <span v-else class="default-avatar">
           <DefaultAvatar
             :avater-name="userInfo ? userInfo.account :'-'"
@@ -41,22 +41,28 @@ export default {
   },
   methods: {
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      // const isJPG = file.type === 'image/jpeg'
+      const isLt1M = file.size / 1024 / 1024 < 1 // 最大1M
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!')
+      // }
+
+      if (!isLt1M) {
+        this.$message.error('上传头像图片大小不能超过 1MB!')
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+      return isLt1M
     },
     // 图片上传成功
     handleAvatarSuccess(response) {
       // dialogForm.value.img_url = URL.createObjectURL(uploadFile.raw!);
       const result = response
+      console.log('response', response)
       const { url } = result
+      // 上传图片成功 更新用户信息
+      this.getUserInfo()
+
+      this.imageUrl = url
     },
     // 文件上传
     submitUpload(options) {
@@ -64,15 +70,15 @@ export default {
       const { file } = options
       const formData = new FormData()
       formData.append('file', file)
-      // console.log(imageBlob)
-      // console.log(imageBase64URL)
 
-      // const range = editor.getSelection()
-      // editor.insertEmbed(range.index, 'image', `${imageBase64URL}`, 'user')
-      // 图片上传
+      // 图片上传 接口
       // return Upload(formData)
       //   .then(result => {
       //     console.log(result)
+
+      //     // 上传图片成功 更新用户信息
+      //     this.getUserInfo()
+      //     this.imageUrl = result.url
 
       //     return result
       //   })
@@ -80,6 +86,9 @@ export default {
       //     console.error(error)
       //     return error
       //   })
+    },
+    async getUserInfo() {
+      await this.$store.dispatch('user/getInfo')
     }
   }
 }

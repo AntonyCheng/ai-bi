@@ -5,6 +5,7 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
+    userInfo: undefined,
     name: '',
     avatar: ''
   }
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  set_userInfo: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -35,7 +39,9 @@ const actions = {
       login({ account: account.trim(), password: password }).then(response => {
         commit('SET_TOKEN', response.data.token)
         setToken(response.data.token)
-        localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo))
+
+        commit('set_userInfo', response.data.res)
+        localStorage.setItem('userInfo', JSON.stringify(response.data.res))
         resolve()
       }).catch(error => {
         reject(error)
@@ -46,8 +52,12 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         const { data } = response
+
+        console.log('response', response)
+
+        commit('set_userInfo', data)
         localStorage.setItem('userInfo', JSON.stringify(data))
         if (!data) {
           return reject('验证失败，请重新登录')

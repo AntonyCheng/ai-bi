@@ -5,17 +5,25 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown v-if="userInfo" class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" alt="avatar">
+          <div>
+            <Avatar
+              v-if="!userInfo.avatar"
+              width="40px"
+              height="40px"
+              :avater-name="userInfo ? userInfo.account :'-'"
+            />
+            <img v-else :src="userInfo || userInfo.avatar" class="user-avatar" alt="avatar">
+          </div>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
+          <el-dropdown-item>
+            <router-link to="/">
               首页
-            </el-dropdown-item>
-          </router-link>
+            </router-link>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">注销</span>
           </el-dropdown-item>
@@ -29,17 +37,23 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Avatar from '@/components/Avatar'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Avatar
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'userInfo'
     ])
+  },
+  mounted() {
+    this.getUserInfo()
   },
   methods: {
     toggleSideBar() {
@@ -48,6 +62,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    async getUserInfo() {
+      await this.$store.dispatch('user/getInfo')
     }
   }
 }

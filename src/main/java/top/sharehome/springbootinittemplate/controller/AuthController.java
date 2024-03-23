@@ -60,13 +60,7 @@ public class AuthController {
     public R<Map<String, Object>> login(@RequestBody @Validated({PostGroup.class}) AuthLoginDto authLoginDto) {
         AuthLoginVo loginUser = authService.login(authLoginDto);
         LoginUtils.login(loginUser);
-        Map<String, Object> res = new HashMap<String, Object>() {
-            {
-                put("userInfo", loginUser);
-                put("token", StpUtil.getTokenValue());
-            }
-        };
-        return R.ok("登录成功", res);
+        return R.okWithToken("登录成功", loginUser);
     }
 
     /**

@@ -9,7 +9,7 @@
       :http-request="submitUpload"
     >
       <span v-if="userInfo" class="avatar-container avatar">
-        <img v-if="userInfo.avatar || imageUrl" :src="userInfo.avatar || imageUrl" class="avatar">
+        <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">
         <span v-else class="default-avatar">
           <DefaultAvatar
             :avater-name="userInfo ? userInfo.account :'-'"
@@ -31,7 +31,7 @@ export default {
   components: { DefaultAvatar },
   data() {
     return {
-      imageUrl: ''
+      // imageUrl: ''
     }
   },
   computed: {
@@ -58,11 +58,11 @@ export default {
       // dialogForm.value.img_url = URL.createObjectURL(uploadFile.raw!);
       const result = response
       console.log('response', response)
-      const { url } = result
+      // const { url } = result
       // 上传图片成功 更新用户信息
-      this.getUserInfo()
+      // this.getUserInfo()
 
-      this.imageUrl = url
+      // this.imageUrl = url
     },
     // 文件上传
     submitUpload(options) {
@@ -78,7 +78,6 @@ export default {
 
       //     // 上传图片成功 更新用户信息
       //     this.getUserInfo()
-      //     this.imageUrl = result.url
 
       //     return result
       //   })

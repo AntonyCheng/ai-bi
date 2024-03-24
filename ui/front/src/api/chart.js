@@ -4,7 +4,10 @@ export function ChartGen(data) {
   return request({
     url: '/chart/gen',
     method: 'post',
-    data
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 

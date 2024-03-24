@@ -9,12 +9,17 @@
           <el-input v-model="form.goal" />
         </el-form-item>
         <el-form-item label="图表类型">
-
-          <el-radio-group v-model="form.chartType">
-            <el-radio :label="'饼图'">饼图</el-radio>
-            <el-radio :label="'折线图'">折线图</el-radio>
-            <el-radio :label="'柱状图'">柱状图</el-radio>
-          </el-radio-group>
+          <el-select v-model="form.chartType" filterable placeholder="请选择图表类型">
+            <el-option
+              v-for="item in typeList"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+          <!-- <el-radio-group>
+            <el-radio v-for="item in typeList" :key="item" :label="item">{{ item }}</el-radio>
+          </el-radio-group> -->
         </el-form-item>
         <el-form-item label="图表文件">
           <el-upload
@@ -36,30 +41,56 @@
         </el-form-item>
       </el-form>
 
-      <div class="chart-preview" />
+      <div v-loading="submitLoading" class="chart-preview">
+        <div class="chart-preview-wrapper">
+
+          <span v-if="!previewData">预览区</span>
+          <EchartsItem v-else :chart-options="previewData" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { ChartGen } from '@/api/chart'
+import EchartsItem from '@/components/EchartsItem/index.vue'
 
 export default {
+  components: { EchartsItem },
   data() {
     return {
       form: {
         name: '',
         goal: '',
         chartType: '',
-        multipartFile: ''
+        file: {}
       },
-      submitLoading: false
+      submitLoading: false,
+      previewData: undefined,
+      typeList: ['折线图', '柱状图', '饼图', '散点图', '地理坐标/地图', 'K 线图', '雷达图', '盒须图', '热力图', '关系图', '路径图', '树图', '矩形树图', '旭日图', '平行坐标系', '桑基图', '漏斗图']
     }
   },
   methods: {
     onSubmit() {
-      this.$message('正在生成中，请稍等')
-      ChartGen(this.form).then((res) => {
+      this.submitLoading = true
+      this.$message('正在生成中，请注意观察底部预览区')
+      const body = new FormData()
+      console.log('body', body)
+      for (const key in this.form) {
+        body.append(key, this.form[key])
+      }
+      // body.append('file', this.form['file'])
+
+      ChartGen(body).then((res) => {
+        this.submitLoading = false
+        const data = res.data
+        console.log('res', res)
+        this.previewData = data.genChart
+        this.$message.success('生成成功')
+      }).catch(() => {
+        this.submitLoading = false
+        this.$message.error('生成失败')
       })
     },
     onCancel() {
@@ -69,12 +100,14 @@ export default {
       })
     },
     beforeAvatarUpload(file) {
-      const isXLS = file.type === 'file/xls'
-      const isXLSX = file.type === 'file/xlsx'
+      console.log(file.name.split('.').reverse()[0])
+      const suffix = file.name.split('.').reverse()[0]
 
-      const isLt2M = file.size / 1024 / 1024 < 2 // 最大1M
+      const suffixFlag = suffix !== 'xls' && suffix !== 'xlsx'
 
-      if (!isXLS && !isXLSX) {
+      const isLt2M = file.size / 1024 / 1024 < 2 // 最大2M
+
+      if (suffixFlag) {
         this.$message.error('上传文件只能是 xls和xlsx 格式!')
       }
 
@@ -82,7 +115,7 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
 
-      const flag = (isXLS || isXLSX) && isLt2M
+      const flag = !suffixFlag && isLt2M
       return flag
     },
     // 图片上传成功
@@ -100,11 +133,11 @@ export default {
     submitUpload(options) {
       // console.log(options);
       const { file } = options
-      const formData = new FormData()
-      formData.append('file', file)
+      // const formData =
+      console.log('file', file)
 
       // 存储
-      this.form.multipartFile = formData
+      this.form.file = file
     }
   }
 }
@@ -127,6 +160,22 @@ export default {
       }
     }
     .chart-preview{
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      &:hover{
+        border-color: #409EFF;
+      }
+
+      .chart-preview-wrapper{
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
     }
 

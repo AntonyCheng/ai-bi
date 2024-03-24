@@ -26,6 +26,7 @@ import top.sharehome.springbootinittemplate.utils.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +38,13 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements ChartService {
+
+    private static final List<String> SUFFIX_LIST = new ArrayList<String>() {
+        {
+            add("xlsx");
+            add("xls");
+        }
+    };
 
     @Resource
     private ChartMapper chartMapper;
@@ -106,8 +114,7 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         }
         String originalFilename = chartGenDto.getFile().getOriginalFilename();
         String suffix = FileUtil.getSuffix(originalFilename);
-        final List<String> validFileSuffixes = Arrays.asList("xlsx", "xls");
-        if (!validFileSuffixes.contains(suffix)) {
+        if (!SUFFIX_LIST.contains(suffix)) {
             throw new CustomizeReturnException(ReturnCode.USER_UPLOADED_FILE_TYPE_MISMATCH, "仅支持xlsx和xls文件");
         }
         String name = chartGenDto.getName();

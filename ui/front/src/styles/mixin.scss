@@ -26,3 +26,15 @@
   width: 100%;
   height: 100%;
 }
+
+// 多行省略
+@mixin mixin-line-clamp($count) {
+  display: -webkit-box;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  -webkit-line-clamp: $count;
+  -webkit-box-orient: vertical;
+}

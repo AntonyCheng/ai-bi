@@ -5,6 +5,11 @@
         <div class="history-card-wrapper">
           <el-card v-for="item in dataList" :key="item.id" class="history-card-item">
             <EchartsItem :chart-options="item.genChart" />
+            <div class="history-desc">
+              <div><span class="title" :title="item.name">{{ item.name }}</span></div>
+              <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
+              <div><span class="genResult" :title="item.genResult">{{ item.genResult }}</span></div>
+            </div>
           </el-card>
         </div>
       </div>
@@ -16,8 +21,8 @@
         :page-size="form.size"
         :total="total"
         style="text-align: center;margin-top: 10px;"
-        @size-change="getData"
-        @current-change="getData"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       />
     </div>
   </div>
@@ -54,6 +59,16 @@ export default {
       this.dataList = data.records || []
       this.total = parseInt(data.total) || 10
     },
+    handleSizeChange(val) {
+      this.form.size = val
+      console.log('this.form.size', this.form.size)
+      this.getData()
+    },
+    handleCurrentChange(val) {
+      this.form.page = val
+      console.log('this.form.page', this.form.page)
+      this.getData()
+    },
     onSubmit() {
       this.$message('submit!')
     },
@@ -68,6 +83,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/mixin.scss";
+
 .history-container{
   padding: 20px;
   .history-wrapper{
@@ -82,6 +99,26 @@ export default {
         display: flex;
         justify-content: flex-start;
         flex-wrap: wrap;
+
+        .history-desc{
+          span{
+            @include mixin-line-clamp(1);
+          }
+
+          .title{
+            font-size: 18px;
+            line-height: 24px;
+          }
+          .goal{
+            font-size: 14px;
+            line-height: 24px;
+          }
+          .genResult{
+            font-size: 12px;
+            line-height: 24px;
+            @include mixin-line-clamp(2);
+          }
+        }
       }
 
       .history-card-item{

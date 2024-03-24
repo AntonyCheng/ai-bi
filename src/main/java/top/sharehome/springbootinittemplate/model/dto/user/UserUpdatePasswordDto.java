@@ -15,7 +15,7 @@ import java.io.Serializable;
 import static top.sharehome.springbootinittemplate.common.base.Constants.REGEX_NUMBER_AND_LETTER;
 
 /**
- * 用户修改账号Dto类
+ * 用户修改密码Dto类
  *
  * @author AntonyCheng
  */

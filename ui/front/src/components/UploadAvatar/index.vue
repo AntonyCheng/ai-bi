@@ -42,17 +42,21 @@ export default {
   },
   methods: {
     beforeAvatarUpload(file) {
-      // const isJPG = file.type === 'image/jpeg'
+      const isJPEG = file.type === 'image/jpeg'
+      const isJPG = file.type === 'image/jpg'
+      const isPNG = file.type === 'image/png'
       const isLt1M = file.size / 1024 / 1024 < 1 // 最大1M
 
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!')
-      // }
+      if (!isJPG && !isJPEG && !isPNG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
+      }
 
       if (!isLt1M) {
         this.$message.error('上传头像图片大小不能超过 1MB!')
       }
-      return isLt1M
+
+      const flag = (isJPG || isJPEG || isPNG) && isLt1M
+      return flag
     },
     // 图片上传成功
     handleAvatarSuccess(response) {
@@ -76,10 +80,8 @@ export default {
       return Upload(formData)
         .then(result => {
           console.log(result)
-
           // 上传图片成功 更新用户信息
           this.getUserInfo()
-
           return result
         })
         .catch(error => {

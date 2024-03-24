@@ -6,8 +6,6 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     userInfo: undefined,
-    name: '',
-    avatar: ''
   }
 }
 
@@ -20,13 +18,7 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
-  set_userInfo: (state, userInfo) => {
+  SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
   }
 }
@@ -40,7 +32,7 @@ const actions = {
         commit('SET_TOKEN', response.data.token)
         setToken(response.data.token)
 
-        commit('set_userInfo', response.data.res)
+        commit('SET_USERINFO', response.data.res)
         localStorage.setItem('userInfo', JSON.stringify(response.data.res))
         resolve()
       }).catch(error => {
@@ -55,18 +47,11 @@ const actions = {
       getInfo().then(response => {
         const { data } = response
 
-        console.log('response', response)
-
-        commit('set_userInfo', data)
+        commit('SET_USERINFO', data)
         localStorage.setItem('userInfo', JSON.stringify(data))
         if (!data) {
           return reject('验证失败，请重新登录')
         }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)

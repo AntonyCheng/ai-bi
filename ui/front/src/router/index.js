@@ -56,14 +56,27 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/analysis',
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
+        path: 'analysis',
+        name: 'Analysis',
+        component: () => import('@/views/analysis/index'),
+        meta: { title: '智能分析', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/history',
+    component: Layout,
+    children: [
+      {
+        path: 'history',
+        name: 'History',
+        component: () => import('@/views/history/index'),
+        meta: { title: '分析记录', icon: 'form' }
       }
     ]
   },

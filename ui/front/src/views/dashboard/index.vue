@@ -76,8 +76,6 @@ export default {
   components: { UploadAvatar },
   computed: {
     ...mapGetters([
-      'name',
-      'avatar',
       'userInfo'
     ])
   },

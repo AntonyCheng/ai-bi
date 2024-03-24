@@ -26,6 +26,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import DefaultAvatar from '@/components/Avatar/index.vue'
+import { Upload } from '@/api/oss'
 
 export default {
   components: { DefaultAvatar },
@@ -72,19 +73,19 @@ export default {
       formData.append('file', file)
 
       // 图片上传 接口
-      // return Upload(formData)
-      //   .then(result => {
-      //     console.log(result)
+      return Upload(formData)
+        .then(result => {
+          console.log(result)
 
-      //     // 上传图片成功 更新用户信息
-      //     this.getUserInfo()
+          // 上传图片成功 更新用户信息
+          this.getUserInfo()
 
-      //     return result
-      //   })
-      //   .catch(error => {
-      //     console.error(error)
-      //     return error
-      //   })
+          return result
+        })
+        .catch(error => {
+          console.error(error)
+          return error
+        })
     },
     async getUserInfo() {
       await this.$store.dispatch('user/getInfo')

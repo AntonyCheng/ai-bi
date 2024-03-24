@@ -14,7 +14,7 @@
               height="40px"
               :avater-name="userInfo ? userInfo.account :'-'"
             />
-            <img v-else :src="userInfo || userInfo.avatar" class="user-avatar" alt="avatar">
+            <img v-else :src="userInfo.avatar" class="user-avatar" alt="avatar">
           </div>
           <i class="el-icon-caret-bottom" />
         </div>

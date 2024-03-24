@@ -6,18 +6,18 @@ import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.base.R;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.common.validate.PutGroup;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.model.dto.SingleFileDto;
+import top.sharehome.springbootinittemplate.model.dto.user.UserUpdateAccountDto;
+import top.sharehome.springbootinittemplate.model.dto.user.UserUpdatePasswordDto;
 import top.sharehome.springbootinittemplate.service.UserService;
 import top.sharehome.springbootinittemplate.utils.oss.tencent.TencentUtils;
+import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -60,7 +60,31 @@ public class UserController {
         }
         String url = TencentUtils.upload(realFile, "ai_bi/avatar");
         userService.updateAvatar(url);
-        return R.ok(url);
+        return R.ok("修改头像成功");
+    }
+
+    /**
+     * 修改账号
+     */
+    @PutMapping("/updateAccount")
+    public R<String> updateAccount(@RequestBody @Validated(PutGroup.class) UserUpdateAccountDto userUpdateAccountDto) {
+        if (userUpdateAccountDto.getNewAccount().equals(LoginUtils.getLoginUserAccount())) {
+            throw new CustomizeReturnException(ReturnCode.USERNAME_ALREADY_EXISTS, "不能是当前帐号");
+        }
+        userService.updateAccount(userUpdateAccountDto.getNewAccount());
+        return R.ok("修改账号成功");
+    }
+
+    /**
+     * 修改密码
+     */
+    @PutMapping("/updatePassword")
+    public R<String> updatePassword(@RequestBody @Validated({PutGroup.class}) UserUpdatePasswordDto userUpdatePasswordDto) {
+        if (!userUpdatePasswordDto.getNewPassword().equals(userUpdatePasswordDto.getCheckNewPassword())){
+            throw new CustomizeReturnException(ReturnCode.PASSWORD_AND_SECONDARY_PASSWORD_NOT_SAME);
+        }
+        userService.updatePassword(userUpdatePasswordDto.getOldPassword(),userUpdatePasswordDto.getNewPassword());
+        return R.ok("修改密码成功，请重新登录");
     }
 
 }

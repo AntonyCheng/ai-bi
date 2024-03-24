@@ -43,7 +43,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
         AuthLoginVo loginUser = (AuthLoginVo) SaHolder.getStorage().get(Constants.LOGIN_USER_KEY);
-        TencentUtils.delete(loginUser.getAvatar());
+        String avatar = loginUser.getAvatar();
+        if (StringUtils.isNotEmpty(avatar)) {
+            TencentUtils.delete(avatar);
+        }
         LoginUtils.syncLoginUser();
     }
 

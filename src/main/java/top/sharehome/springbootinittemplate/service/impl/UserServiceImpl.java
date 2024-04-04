@@ -16,7 +16,7 @@ import top.sharehome.springbootinittemplate.mapper.UserMapper;
 import top.sharehome.springbootinittemplate.model.entity.User;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
 import top.sharehome.springbootinittemplate.service.UserService;
-import top.sharehome.springbootinittemplate.utils.oss.tencent.TencentUtils;
+import top.sharehome.springbootinittemplate.utils.oss.minio.MinioUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
@@ -45,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         AuthLoginVo loginUser = (AuthLoginVo) SaHolder.getStorage().get(Constants.LOGIN_USER_KEY);
         String avatar = loginUser.getAvatar();
         if (StringUtils.isNotEmpty(avatar)) {
-            TencentUtils.delete(avatar);
+            MinioUtils.delete(avatar);
         }
         LoginUtils.syncLoginUser();
     }

@@ -32,14 +32,15 @@ module.exports = {
   devServer: {
     port: 80,
     proxy: {
-      '/api': { target: 'http://localhost:38080/api' }
+      '/api': { target: 'http://localhost:38080' }
     },
     open: true,
     overlay: {
       warnings: false,
       errors: true
-    },
-    before: require('./mock/mock-server.js')
+    }
+    // 模拟数据需要排除在外
+    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

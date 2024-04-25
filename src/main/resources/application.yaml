@@ -360,11 +360,11 @@ redisson:
   # Redis单机版本
   single-server-config:
     # todo 是否启动单机Redis（Redisson）缓存（预先关闭）
-    enable-single: false
+    enable-single: true
     # 单机地址（一定要在redis协议下）
     address: redis://127.0.0.1:6379
     # 数据库索引
-    database: 1
+    database: 0
     # 密码（考虑是否需要密码）
     #password: 123456
     # 命令等待超时，单位：毫秒
@@ -634,8 +634,8 @@ sa-token:
 
 # 验证码配置
 captcha:
-  # todo 是否使用验证码（开启的前提是redisson配置完成，预先关闭）
-  enable: false
+  # todo 是否使用验证码（开启的前提是redisson和ip2region配置完成，预先关闭）
+  enable: true
   # 验证码类型：char 字符类型；math 数字类型。
   type: char
   # 验证码类别：line 线段干扰；circle 圆圈干扰；shear 扭曲干扰。
@@ -650,7 +650,7 @@ captcha:
 # 离线IP库配置
 ip2region:
   # todo 是否启用离线IP
-  enable: false
+  enable: true
   # 数据加载方式
   load-type: memory
 

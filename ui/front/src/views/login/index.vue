@@ -11,7 +11,7 @@
 
       <div class="title-container">
         <h3 class="title">基于AI的智能BI系统</h3>
-        <h5 class="sub-title">做您智能的报表分析师</h5>
+        <h5 class="sub-title">做您的专属智能数据分析师</h5>
       </div>
 
       <el-form-item prop="account">
@@ -49,6 +49,25 @@
         </span>
       </el-form-item>
 
+      <el-form-item prop="captcha.code">
+        <span class="svg-container">
+          <svg-icon icon-class="example" />
+        </span>
+        <el-input
+          ref="captcha.code"
+          v-model="loginForm.captcha.code"
+          placeholder="请输入验证码"
+          name="captcha.code"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+          style="width: 60%"
+        />
+        <span class="code-container">
+          <img alt="captcha.imgBase64" style="width: 140px;height: 50px;margin-top: 12px" :src="imgBase64" @click="getCaptchaBase64">
+        </span>
+      </el-form-item>
+
       <el-button
         :loading="loading"
         type="primary"
@@ -62,6 +81,8 @@
 </template>
 
 <script>
+import { captcha } from '@/api/captcha'
+
 export default {
   name: 'Login',
   data() {
@@ -79,18 +100,31 @@ export default {
         callback()
       }
     }
+    const validateCode = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error('验证码不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         account: '',
-        password: ''
+        password: '',
+        captcha: {
+          code: '',
+          uuid: ''
+        }
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', validator: validateAccount }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        'account': [{ required: true, trigger: 'blur', validator: validateAccount }],
+        'password': [{ required: true, trigger: 'blur', validator: validatePassword }],
+        'captcha.code': [{ required: true, trigger: 'blur', validator: validateCode }]
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      imgBase64: undefined
     }
   },
   watch: {
@@ -100,6 +134,9 @@ export default {
       },
       immediate: true
     }
+  },
+  created() {
+    this.getCaptchaBase64()
   },
   methods: {
     showPwd() {
@@ -123,9 +160,15 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('用户账号密码校验失败')
           return false
         }
+      })
+      this.getCaptchaBase64()
+    },
+    getCaptchaBase64() {
+      captcha().then(response => {
+        this.loginForm.captcha.uuid = response.data.uuid
+        this.imgBase64 = 'data:image/gif;base64,' + response.data.imgBase64
       })
     }
   }
@@ -182,7 +225,7 @@ $cursor: #fff;
 <style lang="scss" scoped>
 $bg-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
 $dark_gray: #76858e;
-$light_gray: #eee;
+$light_gray: #48625d;
 
 .login-container {
   min-height: 100%;
@@ -219,11 +262,19 @@ $light_gray: #eee;
     display: inline-block;
   }
 
+  .code-container {
+    //padding: 6px 5px 6px 15px;
+    //color: $dark_gray;
+    vertical-align: middle;
+    //width: 30px;
+    display: inline-block;
+  }
+
   .title-container {
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 30px;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;

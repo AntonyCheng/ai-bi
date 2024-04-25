@@ -100,6 +100,24 @@
       </el-card>
     </template>
     <template>
+      <el-divider />
+    </template>
+    <template>
+      <el-row align="middle" justify="center">
+        <el-col :span="12" style="text-align: end">
+          <img src="@/assets/logo/logo.png" style="width: 180px">
+        </el-col>
+        <el-col :span="12" style="text-align: start;margin: 50px auto">
+          <div>
+            <p style="color: #232323;font-weight: bold;font-size: larger">做您的专属智能数据分析师</p>
+          </div>
+        </el-col>
+      </el-row>
+    </template>
+    <template>
+      <el-divider />
+    </template>
+    <template>
       <el-dialog
         :title="dialogType==='account'?'修改账号':dialogType==='password'?'修改密码':'修改名称'"
         :visible.sync="dialogVisible"
@@ -399,14 +417,14 @@ export default {
   }
 }
 
-.avatar-class{
-  img{
+.avatar-class {
+  img {
     width: 100%;
     background-size: cover;
   }
 }
 
-.show-pwd{
+.show-pwd {
   position: absolute;
   right: 10px;
   top: 2px;

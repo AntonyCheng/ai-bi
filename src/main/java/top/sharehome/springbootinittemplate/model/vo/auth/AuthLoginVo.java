@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 用户登录Vo类
+ * 登录Vo类
  *
  * @author AntonyCheng
  */
@@ -19,27 +19,27 @@ import java.io.Serializable;
 public class AuthLoginVo implements Serializable {
 
     /**
-     * 用户ID
+     * ID
      */
     private Long id;
 
     /**
-     * 用户账号
+     * 账号
      */
     private String account;
 
     /**
-     * 用户昵称
+     * 昵称
      */
     private String name;
 
     /**
-     * 用户头像
+     * 头像
      */
     private String avatar;
 
     /**
-     * 用户角色（admin/user）
+     * 角色（admin/user）
      */
     private String role;
 

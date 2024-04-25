@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import top.sharehome.springbootinittemplate.common.validate.PostGroup;
 import top.sharehome.springbootinittemplate.common.validate.PutGroup;
 
 import javax.validation.constraints.NotBlank;
@@ -15,7 +14,7 @@ import java.io.Serializable;
 import static top.sharehome.springbootinittemplate.common.base.Constants.REGEX_NUMBER_AND_LETTER;
 
 /**
- * 用户修改账号Dto类
+ * 用户更新账号Dto类
  *
  * @author AntonyCheng
  */
@@ -25,8 +24,6 @@ import static top.sharehome.springbootinittemplate.common.base.Constants.REGEX_N
 @Accessors(chain = true)
 public class UserUpdateAccountDto implements Serializable {
 
-    private static final long serialVersionUID = -2873349826470166944L;
-
     /**
      * 新账号
      */
@@ -34,5 +31,7 @@ public class UserUpdateAccountDto implements Serializable {
     @NotBlank(message = "账号不能为空", groups = {PutGroup.class})
     @Pattern(regexp = REGEX_NUMBER_AND_LETTER, message = "账户名称包含特殊字符", groups = {PutGroup.class})
     private String newAccount;
+
+    private static final long serialVersionUID = -2873349826470166944L;
 
 }

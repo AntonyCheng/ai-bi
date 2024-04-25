@@ -11,11 +11,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.sharehome</groupId>
-    <artifactId>ai-bi</artifactId>
-    <version>1.0.4</version>
-    <name>ai-bi</name>
-    <description>ai-bi</description>
-    <url>https://github.com/AntonyCheng/ai-bi</url>
+    <artifactId>spring-boot-init-template</artifactId>
+    <version>2.1.4</version>
+    <name>spring-boot-init-template</name>
+    <description>spring-boot-init-template</description>
+    <url>https://github.com/AntonyCheng/spring-boot-init-template</url>
     <inceptionYear>2023</inceptionYear>
 
     <!-- 项目开源许可证 -->
@@ -41,11 +41,11 @@
 
     <!-- 项目版本控制 -->
     <scm>
-        <connection>https://github.com/AntonyCheng/ai-bi.git</connection>
+        <connection>https://github.com/AntonyCheng/spring-boot-init-template.git</connection>
         <developerConnection>
-            scm:git:ssh://git@github.com:AntonyCheng/ai-bi.git
+            scm:git:ssh://git@github.com:AntonyCheng/spring-boot-init-template.git
         </developerConnection>
-        <url>https://github.com/AntonyCheng/ai-bi</url>
+        <url>https://github.com/AntonyCheng/spring-boot-init-template</url>
     </scm>
 
     <!-- 依赖版本控制 -->
@@ -55,26 +55,27 @@
         <!-- SpringBoot相关 -->
         <spring.boot.version>2.7.18</spring.boot.version>
         <!-- Netty相关 -->
-        <netty.version>4.1.107.Final</netty.version>
+        <netty.version>4.1.108.Final</netty.version>
         <!-- MySQL相关 -->
         <mysql.version>8.0.33</mysql.version>
         <druid.starter.version>1.2.22</druid.starter.version>
-        <mybatis.plus.starter.version>3.5.5</mybatis.plus.starter.version>
+        <mybatis.plus.starter.version>3.5.6</mybatis.plus.starter.version>
         <shardingsphere.version>5.3.2</shardingsphere.version>
         <!-- 工具类相关 -->
-        <lombok.version>1.18.30</lombok.version>
-        <hutool.version>5.8.26</hutool.version>
+        <lombok.version>1.18.32</lombok.version>
+        <hutool.version>5.8.27</hutool.version>
         <commons.lang3.version>3.14.0</commons.lang3.version>
-        <commons.io.version>2.15.1</commons.io.version>
-        <commons.codec.version>1.16.0</commons.codec.version>
+        <commons.io.version>2.16.0</commons.io.version>
+        <commons.codec.version>1.16.1</commons.codec.version>
         <commons.pool2.version>2.12.0</commons.pool2.version>
         <commons.collections4.version>4.4</commons.collections4.version>
         <commons.math3.version>3.6.1</commons.math3.version>
+        <commons.compress.version>1.26.1</commons.compress.version>
         <ok.http3.version>4.12.0</ok.http3.version>
-        <ok.io.version>3.7.0</ok.io.version>
+        <ok.io.version>3.9.0</ok.io.version>
         <ip2region.version>2.7.0</ip2region.version>
         <knife4j.openapi3.starter.version>4.5.0</knife4j.openapi3.starter.version>
-        <fastjson2.version>2.0.47</fastjson2.version>
+        <fastjson2.version>2.0.49</fastjson2.version>
         <!-- 权限校验相关 -->
         <sa.token.version>1.37.0</sa.token.version>
         <!-- 缓存相关 -->
@@ -83,15 +84,16 @@
         <!-- ElasticSearch相关 -->
         <elasticsearch.version>7.14.0</elasticsearch.version>
         <logstash.logback.version>7.3</logstash.logback.version>
-        <easy.es.starter.version>2.0.0-beta6</easy.es.starter.version>
+        <easy.es.starter.version>2.0.0-beta7</easy.es.starter.version>
         <!-- 对象存储相关 -->
-        <tencent.cos.version>5.6.205</tencent.cos.version>
+        <tencent.cos.version>5.6.210</tencent.cos.version>
         <ali.oss.version>3.17.4</ali.oss.version>
         <ali.jaxb.version>2.3.1</ali.jaxb.version>
         <ali.activation.version>1.1.1</ali.activation.version>
         <minio.version>8.5.9</minio.version>
         <!-- 文件操作相关 -->
         <poi.version>5.2.5</poi.version>
+        <poi.tl.version>1.12.2</poi.tl.version>
         <easy.excel.version>3.3.4</easy.excel.version>
         <itext.version>8.0.3</itext.version>
         <!-- 外部平台相关 -->
@@ -237,6 +239,12 @@
             <artifactId>commons-math3</artifactId>
             <version>${commons.math3.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons.compress.version}</version>
+        </dependency>
+
 
         <!-- Ok Http 依赖配置 -->
         <dependency>
@@ -254,6 +262,11 @@
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2-extension-spring5</artifactId>
             <version>${fastjson2.version}</version>
         </dependency>
 
@@ -385,6 +398,11 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>poi-tl</artifactId>
+            <version>${poi.tl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -523,22 +541,9 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <!-- 关闭过滤 -->
-                <filtering>false</filtering>
             </resource>
             <resource>
                 <directory>src/main/webapp/</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <!-- 引入所有 匹配文件进行过滤 -->
-                <includes>
-                    <include>application*</include>
-                    <include>bootstrap*</include>
-                    <include>logback*</include>
-                </includes>
-                <!-- 启用过滤 即该资源中的变量将会被过滤器中的值替换 -->
-                <filtering>true</filtering>
             </resource>
         </resources>
     </build>

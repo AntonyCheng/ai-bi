@@ -1,6 +1,7 @@
 package top.sharehome.springbootinittemplate.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,11 @@ import top.sharehome.springbootinittemplate.model.dto.auth.AuthLoginDto;
 import top.sharehome.springbootinittemplate.model.dto.auth.AuthRegisterDto;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
 import top.sharehome.springbootinittemplate.service.AuthService;
+import top.sharehome.springbootinittemplate.utils.document.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -32,7 +35,8 @@ public class AuthController {
     private AuthService authService;
 
     /**
-     * 用户注册
+     * 注册
+     * todo 模板默认不使用该接口，但保留该接口，因为该模板中真实增加用户的接口应该是管理员增加用户
      *
      * @param authRegisterDto 用户注册Dto类
      * @return 返回注册结果
@@ -48,10 +52,10 @@ public class AuthController {
     }
 
     /**
-     * 用户登录
+     * 登录
      *
      * @param authLoginDto 用户登录Dto类
-     * @return 返回登录用户信息JWT
+     * @return 返回登录用户信息
      */
     @PostMapping("/login")
     @EnableCaptcha
@@ -62,7 +66,7 @@ public class AuthController {
     }
 
     /**
-     * 获取登录用户信息
+     * 获取登录信息
      *
      * @return 返回登录用户信息结果
      */
@@ -73,7 +77,7 @@ public class AuthController {
     }
 
     /**
-     * 用户退出
+     * 退出
      *
      * @return 返回退出结果
      */

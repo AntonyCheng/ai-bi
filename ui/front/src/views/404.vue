@@ -8,10 +8,12 @@
         <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
       </div>
       <div class="bullshit">
-        <div class="bullshit__oops">页面走丢咯!</div>
-        <div class="bullshit__info">All rights reserved WangFei</div>
+        <div class="bullshit__oops">页面走丢咯...</div>
+        <div class="bullshit__info">All rights reserved
+          <a style="color:#20a0ff" href="https://github.com/AntonyCheng" target="_blank">AntonyCheng</a>
+        </div>
         <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">请检查您输入的URL是否正确，或点击“返回首页”。</div>
+        <div class="bullshit__info">请检查你输入的URL是否正确，或者点击下面“返回首页”按钮！</div>
         <a href="" class="bullshit__return-home">返回首页</a>
       </div>
     </div>
@@ -24,7 +26,7 @@ export default {
   name: 'Page404',
   computed: {
     message() {
-      return '您无法进入这个页面哦~'
+      return '此页面不存在哦...'
     }
   }
 }

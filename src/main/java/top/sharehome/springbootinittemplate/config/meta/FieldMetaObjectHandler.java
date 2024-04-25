@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
+import top.sharehome.springbootinittemplate.common.base.Constants;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -16,6 +17,11 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 public class FieldMetaObjectHandler implements MetaObjectHandler {
+
+    /**
+     * 需要处理的字段名——state
+     */
+    public static final String STATE = "state";
 
     /**
      * 需要处理的字段名——updateTime
@@ -43,6 +49,10 @@ public class FieldMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
+        if (metaObject.hasSetter(STATE)) {
+            metaObject.setValue(STATE, 0);
+        }
+
         if (metaObject.hasSetter(UPDATE_TIME)) {
             metaObject.setValue(UPDATE_TIME, LocalDateTime.now());
         }
@@ -56,7 +66,7 @@ public class FieldMetaObjectHandler implements MetaObjectHandler {
         }
 
         if (metaObject.hasSetter(ROLE)) {
-            metaObject.setValue(ROLE, "user");
+            metaObject.setValue(ROLE, Constants.ROLE_USER);
         }
     }
 

@@ -6,9 +6,8 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: '/api', // url = base url + request url
-  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  withCredentials: true, // send cookies when cross-domain requests
-  timeout: 50000 // request timeout
+  withCredentials: true // send cookies when cross-domain requests
+  // timeout: 10000 // request timeout
 })
 
 // request interceptor
@@ -31,12 +30,16 @@ service.interceptors.request.use(
   }
 )
 
+const RESPONSE_URI_WHITE_LIST = [
+  '/admin/export'
+]
+
 // response interceptor
 service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -45,8 +48,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
+    // if the uri in whitelist, it is judged as a success.
+    if (RESPONSE_URI_WHITE_LIST.includes(response.request.responseURL.split(service.defaults.baseURL)[1])) {
+      return response
+    }
+    // if the custom code is not 200, it is judged as an error.
     if (res.code !== 200) {
       Message({
         message: res.msg || 'Error',
@@ -54,6 +60,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
+      // 401: Illegal token;
       if (res.code === 401) {
         // to re-login
         MessageBox.confirm('您的状态为注销状态，可以选择点击“取消”留在这个页面，也可以重新登录', '确认注销', {
@@ -61,7 +68,7 @@ service.interceptors.response.use(
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
+          store.dispatch('auth/resetToken').then(() => {
             location.reload()
           })
         })

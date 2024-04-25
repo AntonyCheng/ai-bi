@@ -1,31 +1,33 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function updateAccount(data) {
   return request({
-    url: '/auth/login',
-    method: 'post',
+    url: '/user/update/account',
+    method: 'put',
     data
   })
 }
 
-export function register(data) {
+export function updateName(data) {
   return request({
-    url: '/auth/register',
-    method: 'post',
+    url: '/user/update/name',
+    method: 'put',
     data
   })
 }
 
-export function getInfo() {
+export function updatePassword(data) {
   return request({
-    url: '/auth/info',
-    method: 'get'
+    url: '/user/update/password',
+    method: 'put',
+    data
   })
 }
 
-export function logout() {
+export function updateAvatar(data) {
   return request({
-    url: '/auth/logout',
-    method: 'delete'
+    url: '/user/update/avatar',
+    method: 'put',
+    data
   })
 }

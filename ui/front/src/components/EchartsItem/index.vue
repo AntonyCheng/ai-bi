@@ -104,7 +104,7 @@ export default {
   methods: {
     // json字符串中，包含函数時，使用JSON.parse(strJSON)转换时，定义的字符串函数被识别成普通的字符串。
     funReviver(key, value) {
-      if (key == 'formatter' && typeof value === 'string' && value.indexOf('function') == 0) {
+      if (key === 'formatter' && typeof value === 'string' && value.indexOf('function') === 0) {
         // alert(key);
         return Function('return ' + value)()
       }

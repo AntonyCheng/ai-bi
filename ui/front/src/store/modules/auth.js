@@ -1,11 +1,15 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    userInfo: undefined,
+    id: '',
+    account: '',
+    name: '',
+    avatar: '',
+    role: ''
   }
 }
 
@@ -18,8 +22,20 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_USERINFO: (state, userInfo) => {
-    state.userInfo = userInfo
+  SET_ID: (state, id) => {
+    state.id = id
+  },
+  SET_ACCOUNT: (state, account) => {
+    state.account = account
+  },
+  SET_NAME: (state, name) => {
+    state.name = name
+  },
+  SET_AVATAR: (state, avatar) => {
+    state.avatar = avatar
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
@@ -29,11 +45,9 @@ const actions = {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ account: account.trim(), password: password }).then(response => {
-        commit('SET_TOKEN', response.data.token)
-        setToken(response.data.token)
-
-        commit('SET_USERINFO', response.data.res)
-        localStorage.setItem('userInfo', JSON.stringify(response.data.res))
+        const { data } = response
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -44,14 +58,20 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo().then(response => {
+      getInfo(state.token).then(response => {
         const { data } = response
 
-        commit('SET_USERINFO', data)
-        localStorage.setItem('userInfo', JSON.stringify(data))
         if (!data) {
           return reject('验证失败，请重新登录')
         }
+
+        const { id, account, name, avatar, role } = data
+
+        commit('SET_ID', id)
+        commit('SET_ACCOUNT', account)
+        commit('SET_NAME', name)
+        commit('SET_AVATAR', avatar)
+        commit('SET_ROLE', role)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -64,7 +84,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
-        localStorage.removeItem('userInfo')
         resetRouter()
         commit('RESET_STATE')
         resolve()

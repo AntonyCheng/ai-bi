@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import top.sharehome.springbootinittemplate.common.validate.GetGroup;
-import top.sharehome.springbootinittemplate.model.entity.PageModel;
+import top.sharehome.springbootinittemplate.model.page.PageModel;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

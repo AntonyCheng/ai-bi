@@ -6,8 +6,10 @@ import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * EasyExcel Integer转换类
@@ -43,11 +45,9 @@ public class ExcelIntegerConverter implements Converter<Integer> {
      */
     @Override
     public WriteCellData<Object> convertToExcelData(Integer value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        if (ObjectUtils.isNotEmpty(value)) {
-            String stringValue = String.valueOf(value);
-            return new WriteCellData<Object>(CellDataTypeEnum.NUMBER, stringValue);
-        }
-        return new WriteCellData<Object>(CellDataTypeEnum.STRING,"");
+        WriteCellData<Object> cellData = new WriteCellData<>(new BigDecimal(value));
+        cellData.setType(CellDataTypeEnum.NUMBER);
+        return cellData;
     }
 
 }

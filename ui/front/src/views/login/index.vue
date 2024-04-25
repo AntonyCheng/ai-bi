@@ -50,10 +50,9 @@
       </el-form-item>
 
       <el-button
-        type="primary"
-        round
-        style="width:100%;margin-bottom:30px;"
         :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >登录
       </el-button>
@@ -117,7 +116,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.$store.dispatch('auth/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
@@ -182,8 +181,8 @@ $cursor: #fff;
 
 <style lang="scss" scoped>
 $bg-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-$title-color: #000000;
-$icon-color: #3c444d;
+$dark_gray: #76858e;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
@@ -214,7 +213,7 @@ $icon-color: #3c444d;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $icon-color;
+    color: $dark_gray;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -225,15 +224,14 @@ $icon-color: #3c444d;
 
     .title {
       font-size: 26px;
-      color: $title-color;
-      margin: auto auto 20px auto;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
-
     .sub-title {
       font-size: 20px;
-      color: $title-color;
+      color: $light_gray;
       margin: auto auto 20px auto;
       text-align: center;
       font-weight: bold;
@@ -245,7 +243,7 @@ $icon-color: #3c444d;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: $icon-color;
+    color: $dark_gray;
     cursor: pointer;
     user-select: none;
   }

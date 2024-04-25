@@ -1,6 +1,7 @@
 package top.sharehome.springbootinittemplate.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.model.entity.User;
 
 /**
@@ -9,24 +10,33 @@ import top.sharehome.springbootinittemplate.model.entity.User;
  * @author AntonyCheng
  */
 public interface UserService extends IService<User> {
-    /**
-     * 更新头像
-     *
-     * @param url 新头像地址
-     */
-    void updateAvatar(String url);
 
     /**
-     * 修改账号
+     * 更新账号
      *
      * @param newAccount 新账号
      */
     void updateAccount(String newAccount);
 
     /**
-     * 修改密码
+     * 更新名称
+     *
+     * @param newName 新名称
+     */
+    void updateName(String newName);
+
+    /**
+     * 更新密码
+     *
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      */
     void updatePassword(String oldPassword, String newPassword);
+
+    /**
+     * 更新头像
+     *
+     * @param file 新头像文件
+     */
+    void updateAvatar(MultipartFile file);
 }

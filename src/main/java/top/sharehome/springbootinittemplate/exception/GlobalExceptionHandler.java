@@ -5,6 +5,7 @@ import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SameTokenInvalidException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.util.NestedServletException;
 import top.sharehome.springbootinittemplate.common.base.HttpStatus;
 import top.sharehome.springbootinittemplate.common.base.R;
 import top.sharehome.springbootinittemplate.exception.customize.*;
@@ -22,6 +24,7 @@ import top.sharehome.springbootinittemplate.exception.customize.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+import java.util.Objects;
 
 /**
  * Security全局异常处理器
@@ -43,8 +46,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotPermissionException.class)
     public R<Void> handleNotPermissionException(NotPermissionException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',权限码校验失败'{}'", requestURI, e.getMessage());
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',权限码校验失败'{}'", requestUri, e.getMessage());
         return R.fail(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
     }
 
@@ -57,8 +60,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotRoleException.class)
     public R<Void> handleNotRoleException(NotRoleException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',角色权限校验失败'{}'", requestURI, e.getMessage());
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',角色权限校验失败'{}'", requestUri, e.getMessage());
         return R.fail(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
     }
 
@@ -71,8 +74,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotLoginException.class)
     public R<Void> handleNotLoginException(NotLoginException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',认证失败'{}',无法访问系统资源", requestURI, e.getMessage());
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',认证失败'{}',无法访问系统资源", requestUri, e.getMessage());
         return R.fail(HttpStatus.UNAUTHORIZED, "认证失败，无法访问系统资源");
     }
 
@@ -85,8 +88,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(SameTokenInvalidException.class)
     public R<Void> handleSameTokenInvalidException(SameTokenInvalidException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',内网认证失败'{}',无法访问系统资源", requestURI, e.getMessage());
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',内网认证失败'{}',无法访问系统资源", requestUri, e.getMessage());
         return R.fail(HttpStatus.UNAUTHORIZED, "认证失败，无法访问系统资源");
     }
 
@@ -99,8 +102,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public R<Void> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',不支持'{}'请求", requestURI, e.getMethod());
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',不支持'{}'请求", requestUri, e.getMethod());
         return R.fail(HttpStatus.BAD_METHOD, e.getMessage());
     }
 
@@ -113,8 +116,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MissingPathVariableException.class)
     public R<Void> handleMissingPathVariableException(MissingPathVariableException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求路径中缺少必需的路径变量'{}',发生系统异常.", requestURI, e);
+        String requestUri = request.getRequestURI();
+        log.error("请求路径中缺少必需的路径变量'{}',发生系统异常.", requestUri, e);
         return R.fail(HttpStatus.BAD_REQUEST, String.format("请求路径中缺少必需的路径变量[%s]", e.getVariableName()));
     }
 
@@ -127,9 +130,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public R<Void> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求参数类型不匹配'{}',发生系统异常.", requestURI, e);
-        return R.fail(HttpStatus.BAD_REQUEST, String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), e.getRequiredType().getName(), e.getValue()));
+        String requestUri = request.getRequestURI();
+        log.error("请求参数类型不匹配'{}',发生系统异常.", requestUri, e);
+        return R.fail(HttpStatus.BAD_REQUEST, String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), Objects.isNull(e.getRequiredType()) ? "None" : e.getRequiredType().getName(), e.getValue()));
     }
 
     /**
@@ -141,8 +144,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MultipartException.class)
     public R<Void> handleMultipartException(MultipartException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求参数类型不匹配'{}',发生系统异常.", requestURI, e);
+        String requestUri = request.getRequestURI();
+        log.error("请求参数类型不匹配'{}',发生系统异常.", requestUri, e);
         return R.fail(HttpStatus.BAD_REQUEST, "文件参数异常");
     }
 
@@ -155,8 +158,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public R<Void> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生未知异常.", requestURI, e);
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',发生未知异常.", requestUri, e);
         return R.fail(HttpStatus.ERROR, e.getMessage());
     }
 
@@ -169,8 +172,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public R<Void> handleException(Exception e, HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生系统异常.", requestURI, e);
+        String requestUri = request.getRequestURI();
+        log.error("请求地址'{}',发生系统异常.", requestUri, e);
         return R.fail(HttpStatus.ERROR, e.getMessage());
     }
 
@@ -231,7 +234,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
-        String message = e.getBindingResult().getFieldError().getDefaultMessage();
+        String message = Objects.isNull(e.getBindingResult().getFieldError()) ? "No Message" : e.getBindingResult().getFieldError().getDefaultMessage();
         return R.fail(HttpStatus.BAD_REQUEST, message);
     }
 
@@ -246,6 +249,16 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         String message = e.getAllErrors().get(0).getDefaultMessage();
         return R.fail(HttpStatus.BAD_REQUEST, message);
+    }
+
+    /**
+     * 自定义未找到Bean异常
+     * todo Beta测试版本，为合理适配前端框架上传文件时找不到上传文件Bean时报错，一般是因为开发者没有开启OSS功能，这个不影响业务功能，一旦有合理方案就会做出修改
+     */
+    @ExceptionHandler(NestedServletException.class)
+    public R<Void> handleNestedServletException(NestedServletException e) {
+        log.error(e.getMessage(), e);
+        return R.fail(HttpStatus.ERROR, "功能服务未开启");
     }
 
     // todo 第一个todo中的异常均为自定义异常，抛出的错误码被包含在ReturnCode枚举类中

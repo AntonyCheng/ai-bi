@@ -5,25 +5,18 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown v-if="userInfo" class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <div>
-            <Avatar
-              v-if="!userInfo.avatar"
-              width="40px"
-              height="40px"
-              :avater-name="userInfo ? userInfo.account :'-'"
-            />
-            <img v-else :src="userInfo.avatar" class="user-avatar" alt="avatar">
-          </div>
+          <el-avatar v-if="avatar" shape="square" :src="avatar" class="avatar-class" />
+          <el-avatar v-else shape="square" style="font-size: x-large" class="avatar-class">{{ name.at(0) }}</el-avatar>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <el-dropdown-item>
-            <router-link to="/">
+          <router-link to="/">
+            <el-dropdown-item>
               首页
-            </router-link>
-          </el-dropdown-item>
+            </el-dropdown-item>
+          </router-link>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">注销</span>
           </el-dropdown-item>
@@ -37,46 +30,45 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Avatar from '@/components/Avatar'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger,
-    Avatar
+    Hamburger
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'userInfo'
+      'name'
     ])
-  },
-  mounted() {
-    this.getUserInfo()
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
+      await this.$store.dispatch('auth/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    async getUserInfo() {
-      await this.$store.dispatch('user/getInfo')
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.avatar-class {
+  img {
+    width: 100%;
+    background-size: cover;
+  }
+}
+
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -84,7 +76,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)

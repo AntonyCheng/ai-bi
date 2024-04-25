@@ -17,12 +17,12 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
+ roles: ['admin','editor']    control the page roles (you can set multiple roles)
+ title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+ icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
+ breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+ activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+ }
  */
 
 /**
@@ -34,27 +34,31 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    role: ['admin', 'user']
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
+    role: ['admin', 'user']
   },
 
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
+      }
+    ],
+    role: ['admin', 'user']
   },
-
   {
     path: '/analysis',
     component: Layout,
@@ -65,9 +69,9 @@ export const constantRoutes = [
         component: () => import('@/views/analysis/index'),
         meta: { title: '智能分析', icon: 'form' }
       }
-    ]
+    ],
+    role: ['admin', 'user']
   },
-
   {
     path: '/history',
     component: Layout,
@@ -78,11 +82,30 @@ export const constantRoutes = [
         component: () => import('@/views/history/index'),
         meta: { title: '分析记录', icon: 'form' }
       }
-    ]
+    ],
+    role: ['admin', 'user']
+  },
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'manage',
+        name: 'UserManage',
+        component: () => import('@/views/userManage/index'),
+        meta: { title: '用户管理', icon: 'table' }
+      }
+    ],
+    role: ['admin']
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true,
+    role: ['admin', 'user']
+  }
 ]
 
 const createRouter = () => new Router({

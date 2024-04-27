@@ -10,7 +10,7 @@
     >
 
       <div class="title-container">
-        <h3 class="title">基于AI的智能BI系统</h3>
+        <h3 class="title">基于AIGC的自动可视化BI系统</h3>
         <h5 class="sub-title">做您的专属智能数据分析师</h5>
       </div>
 

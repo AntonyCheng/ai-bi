@@ -637,7 +637,7 @@ captcha:
   # todo 是否使用验证码（开启的前提是redisson和ip2region配置完成，预先关闭）
   enable: true
   # 验证码类型：char 字符类型；math 数字类型。
-  type: char
+  type: math
   # 验证码类别：line 线段干扰；circle 圆圈干扰；shear 扭曲干扰。
   category: line
   # 数字验证码位数（1-9，否则默认为1）

@@ -56,7 +56,7 @@
         <el-input
           ref="captcha.code"
           v-model="loginForm.captcha.code"
-          placeholder="请输入验证码"
+          placeholder="请输入验证码结果"
           name="captcha.code"
           type="text"
           tabindex="1"

@@ -98,6 +98,32 @@ export const constantRoutes = [
     ],
     role: ['admin']
   },
+  {
+    path: '/file',
+    component: Layout,
+    children: [
+      {
+        path: 'manage',
+        name: 'FileManage',
+        component: () => import('@/views/fileManage/index'),
+        meta: { title: '文件管理', icon: 'table' }
+      }
+    ],
+    role: ['admin']
+  },
+  {
+    path: '/operation',
+    component: Layout,
+    children: [
+      {
+        path: 'manage',
+        name: 'OperationManage',
+        component: () => import('@/views/operationManage/index'),
+        meta: { title: '操作管理', icon: 'table' }
+      }
+    ],
+    role: ['admin']
+  },
 
   // 404 page must be placed at the end !!!
   {

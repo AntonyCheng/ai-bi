@@ -1,7 +1,6 @@
 package top.sharehome.springbootinittemplate.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +11,13 @@ import top.sharehome.springbootinittemplate.config.captcha.annotation.EnableCapt
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.model.dto.auth.AuthLoginDto;
 import top.sharehome.springbootinittemplate.model.dto.auth.AuthRegisterDto;
+import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
 import top.sharehome.springbootinittemplate.service.AuthService;
-import top.sharehome.springbootinittemplate.utils.document.excel.ExcelUtils;
+import top.sharehome.springbootinittemplate.service.OperationService;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -33,6 +32,9 @@ public class AuthController {
 
     @Resource
     private AuthService authService;
+
+    @Resource
+    private OperationService operationService;
 
     /**
      * 注册
@@ -62,6 +64,7 @@ public class AuthController {
     public R<Map<String, Object>> login(@RequestBody @Validated({PostGroup.class}) AuthLoginDto authLoginDto) {
         AuthLoginVo loginUser = authService.login(authLoginDto);
         LoginUtils.login(loginUser);
+        operationService.addOperation(new OperationAddDto("/auth/login", loginUser.getId(), loginUser.getAccount(), "用户已经登录" + "[id=" + loginUser.getId() + "，账号=" + loginUser.getAccount() + "]"));
         return R.okWithToken("登录成功", loginUser);
     }
 
@@ -83,7 +86,9 @@ public class AuthController {
      */
     @DeleteMapping("/logout")
     public R<String> logout() {
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
         LoginUtils.logout();
+        operationService.addOperation(new OperationAddDto("/auth/logout", loginUser.getId(), loginUser.getAccount(), "用户已经退出" + "[id=" + loginUser.getId() + "，账号=" + loginUser.getAccount() + "]"));
         return R.ok("退出成功");
     }
 

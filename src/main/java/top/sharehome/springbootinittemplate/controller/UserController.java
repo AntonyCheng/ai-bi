@@ -16,10 +16,13 @@ import top.sharehome.springbootinittemplate.common.base.R;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.common.validate.PutGroup;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
+import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.dto.user.UserUpdateAccountDto;
 import top.sharehome.springbootinittemplate.model.dto.user.UserUpdateAvatarDto;
 import top.sharehome.springbootinittemplate.model.dto.user.UserUpdateNameDto;
 import top.sharehome.springbootinittemplate.model.dto.user.UserUpdatePasswordDto;
+import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
+import top.sharehome.springbootinittemplate.service.OperationService;
 import top.sharehome.springbootinittemplate.service.UserService;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
@@ -57,6 +60,9 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private OperationService operationService;
+
     /**
      * 用户更新账号
      *
@@ -69,6 +75,8 @@ public class UserController {
             throw new CustomizeReturnException(ReturnCode.USERNAME_ALREADY_EXISTS, "不能和当前帐号重复");
         }
         userService.updateAccount(userUpdateAccountDto.getNewAccount());
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/user/update/account", loginUser.getId(), loginUser.getAccount(), "用户" + "[id=" + loginUser.getId() + "]更新账号"));
         return R.ok("更新账号成功");
     }
 
@@ -84,6 +92,8 @@ public class UserController {
             throw new CustomizeReturnException(ReturnCode.USERNAME_ALREADY_EXISTS, "不能和当前名称重复");
         }
         userService.updateName(userUpdateNameDto.getNewName());
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/user/update/name", loginUser.getId(), loginUser.getAccount(), "用户" + "[id=" + loginUser.getId() + "]更新名称"));
         return R.ok("更新账号成功");
     }
 
@@ -102,6 +112,8 @@ public class UserController {
             throw new CustomizeReturnException(ReturnCode.NEW_PASSWORD_AND_OLD_PASSWORD_ARE_SAME);
         }
         userService.updatePassword(userUpdatePasswordDto.getOldPassword(), userUpdatePasswordDto.getNewPassword());
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/user/update/password", loginUser.getId(), loginUser.getAccount(), "用户" + "[id=" + loginUser.getId() + "]更新密码"));
         return R.ok("更新密码成功，请重新登录");
     }
 
@@ -123,6 +135,8 @@ public class UserController {
             throw new CustomizeReturnException(ReturnCode.USER_UPLOADED_FILE_TYPE_MISMATCH, "头像仅支持png和jpg格式");
         }
         userService.updateAvatar(file);
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/user/update/avatar", loginUser.getId(), loginUser.getAccount(), "用户" + "[id=" + loginUser.getId() + "]更新头像"));
         return R.ok("更新头像成功");
     }
 }

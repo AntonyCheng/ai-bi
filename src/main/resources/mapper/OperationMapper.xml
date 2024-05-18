@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.sharehome.springbootinittemplate.mapper.OperationMapper">
+
+    <resultMap id="BaseResultMap" type="top.sharehome.springbootinittemplate.model.entity.Operation">
+            <id property="id" column="operation_id" jdbcType="BIGINT"/>
+            <result property="api" column="operation_api" jdbcType="VARCHAR"/>
+            <result property="userId" column="operation_user_id" jdbcType="BIGINT"/>
+            <result property="userAccount" column="operation_user_account" jdbcType="VARCHAR"/>
+            <result property="description" column="operation_description" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        operation_id,operation_api,operation_user_id,
+        operation_user_account,operation_description,create_time,
+        update_time,is_deleted
+    </sql>
+</mapper>

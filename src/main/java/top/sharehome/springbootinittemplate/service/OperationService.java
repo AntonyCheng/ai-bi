@@ -31,4 +31,9 @@ public interface OperationService extends IService<Operation> {
      */
     void addOperation(OperationAddDto operationAddDto);
 
+    /**
+     * 清空操作记录
+     */
+    void clearOperation();
+
 }

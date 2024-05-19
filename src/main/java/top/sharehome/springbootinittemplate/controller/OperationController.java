@@ -3,6 +3,7 @@ package top.sharehome.springbootinittemplate.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,10 +42,21 @@ public class OperationController {
      */
     @GetMapping("/page")
     public R<Page<OperationPageVo>> pageOperation(OperationPageDto operationPageDto, PageModel pageModel) {
-        Page<OperationPageVo> page = operationService.pageOperation(operationPageDto, pageModel);
         AuthLoginVo loginUser = LoginUtils.getLoginUser();
         operationService.addOperation(new OperationAddDto("/operation/page", loginUser.getId(), loginUser.getAccount(), "管理员分页查询操作日志信息"));
+        Page<OperationPageVo> page = operationService.pageOperation(operationPageDto, pageModel);
         return R.ok(page);
+    }
+
+    /**
+     * 清空操作记录
+     *
+     * @return 返回清空提示
+     */
+    @DeleteMapping("/clear")
+    public R<String> clearOperation() {
+        operationService.clearOperation();
+        return R.ok("已清空操作记录");
     }
 
 }

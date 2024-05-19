@@ -36,4 +36,18 @@ public interface ChartService extends IService<Chart> {
      * 通过AI生成图表
      */
     ChartGenVo genChartByAi(ChartGenDto chartGenDto);
+
+    /**
+     * 管理员根据ID删除图表
+     *
+     * @param id 被删除用户的ID
+     */
+    void deleteChart(Long id);
+
+    /**
+     * 用户根据ID删除图表
+     *
+     * @param id 被删除用户的ID
+     */
+    void deleteUserChart(Long id);
 }

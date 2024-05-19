@@ -99,6 +99,19 @@ export const constantRoutes = [
     role: ['admin']
   },
   {
+    path: '/chart',
+    component: Layout,
+    children: [
+      {
+        path: 'manage',
+        name: 'ChartManage',
+        component: () => import('@/views/chartManage/index'),
+        meta: { title: '图表管理', icon: 'table' }
+      }
+    ],
+    role: ['admin']
+  },
+  {
     path: '/file',
     component: Layout,
     children: [

@@ -4,11 +4,19 @@
       <div v-if="dataList && dataList.length !== 0" class="history-card-main">
         <div class="history-card-wrapper">
           <el-card v-for="item in dataList" :key="item.id" class="history-card-item">
-            <EchartsItem :chart-options="item.genChart" />
-            <div class="history-desc">
-              <div><span class="title" :title="item.name">{{ item.name }}</span></div>
-              <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
-              <div><span class="genResult" :title="item.genResult">{{ item.genResult }}</span></div>
+            <div class="card-wrapper">
+              <EchartsItem :chart-options="item.genChart" />
+              <div class="history-desc">
+                <!-- <div><span class="title" :title="item.createTime">{{ item.createTime }}</span></div> -->
+                <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
+                <!-- <div><span class="genResult" :title="item.genResult">{{ item.genResult }}</span></div> -->
+                <div style="display: flex;justify-content: space-between;">
+                  <el-button type="primary" @click.prevent="dialogShowChart(item)">查看详情</el-button>
+                  <div style="display: flex;align-items: center;justify-content: flex-end;">
+                    <span class="title" :title="item.createTime" style="text-align: right;font-size:14px;">于{{ item.createTime }}生成</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </el-card>
         </div>
@@ -24,6 +32,24 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
+
+      <el-dialog
+        title="图表详情"
+        :visible.sync="dialogVisible"
+        width="60%"
+        :before-close="handleClose"
+      >
+        <EchartsItem v-if="dialogData.genChart" :chart-options="dialogData.genChart" />
+        <div class="history-desc">
+          <div><span class="title" :title="dialogData.name">{{ dialogData.name }}</span></div>
+          <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
+          <div><span class="genResult" :title="dialogData.genResult">{{ dialogData.genResult }}</span></div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -46,7 +72,10 @@ export default {
         userId: undefined
       },
       dataList: [],
-      total: 10
+      total: 10,
+      // 对话框
+      dialogVisible: false,
+      dialogData: {}
     }
   },
   mounted() {
@@ -77,6 +106,24 @@ export default {
         message: 'cancel!',
         type: 'warning'
       })
+    },
+    handleClose(done) {
+      done()
+    },
+    dialogShowChart(genChart) {
+      // console.log(1)
+      const noData = {
+        genChart: null,
+        name: '--',
+        genResult: '--'
+      }
+      this.dialogData = genChart
+      console.log('genChart', genChart)
+      console.log('genChart', genChart)
+      this.dialogVisible = true
+      if (!genChart) {
+        this.dialogData = noData
+      }
     }
   }
 }
@@ -138,5 +185,25 @@ export default {
 
   }
 }
+
+.history-desc{
+          span{
+            @include mixin-line-clamp(1);
+          }
+
+          .title{
+            font-size: 18px;
+            line-height: 24px;
+          }
+          .goal{
+            font-size: 14px;
+            line-height: 24px;
+          }
+          .genResult{
+            font-size: 12px;
+            line-height: 24px;
+            @include mixin-line-clamp(2);
+          }
+        }
 </style>
 

@@ -28,6 +28,7 @@ import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -153,6 +154,36 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         biResponse.setGenResult(genResult);
         return biResponse;
     }
+
+    @Override
+    @Transactional(rollbackFor = CustomizeTransactionException.class)
+    public void deleteChart(Long id) {
+        Chart chartInDatabase = chartMapper.selectById(id);
+        if (Objects.isNull(chartInDatabase)) {
+            return;
+        }
+        int deleteResult = chartMapper.deleteById(id);
+        if (deleteResult == 0) {
+            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = CustomizeTransactionException.class)
+    public void deleteUserChart(Long id) {
+        Chart chartInDatabase = chartMapper.selectById(id);
+        if (Objects.isNull(chartInDatabase)) {
+            return;
+        }
+        if (!Objects.equals(chartInDatabase.getUserId(),LoginUtils.getLoginUserId())) {
+            return;
+        }
+        int deleteResult = chartMapper.deleteById(id);
+        if (deleteResult == 0) {
+            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
+    }
+
 }
 
 

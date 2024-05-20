@@ -73,7 +73,7 @@ public class File implements Serializable {
     /**
      * 是否删除
      */
-    @TableField(value = "is_delete")
+    @TableField(value = "is_deleted")
     @TableLogic
     private Integer isDeleted;
 

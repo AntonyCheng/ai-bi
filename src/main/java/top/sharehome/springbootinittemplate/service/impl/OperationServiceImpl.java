@@ -47,12 +47,12 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
 
         List<OperationPageVo> newRecords = page.getRecords().stream().map(operation -> {
             OperationPageVo operationPageVo = new OperationPageVo();
-            operationPageVo.setId(operationPageVo.getId());
-            operationPageVo.setApi(operationPageVo.getApi());
-            operationPageVo.setUserId(operationPageVo.getUserId());
-            operationPageVo.setUserAccount(operationPageVo.getUserAccount());
-            operationPageVo.setDescription(operationPageVo.getDescription());
-            operationPageVo.setCreateTime(operationPageVo.getCreateTime());
+            operationPageVo.setId(operation.getId());
+            operationPageVo.setApi(operation.getApi());
+            operationPageVo.setUserId(operation.getUserId());
+            operationPageVo.setUserAccount(operation.getUserAccount());
+            operationPageVo.setDescription(operation.getDescription());
+            operationPageVo.setCreateTime(operation.getCreateTime());
             return operationPageVo;
         }).collect(Collectors.toList());
         BeanUtils.copyProperties(page, res, "records");
@@ -66,10 +66,20 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
         Operation operation = new Operation();
         BeanUtils.copyProperties(operationAddDto, operation);
         int insertResult = operationMapper.insert(operation);
-        if (insertResult==0){
+        if (insertResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
     }
+
+    @Override
+    public void clearOperation() {
+        List<Long> ids = operationMapper.selectList(null).stream().map(Operation::getId).collect(Collectors.toList());
+        int deleteResult = operationMapper.deleteBatchIds(ids);
+        if (deleteResult == 0) {
+            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
+    }
+
 }
 
 

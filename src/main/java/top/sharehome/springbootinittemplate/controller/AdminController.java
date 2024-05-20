@@ -13,12 +13,15 @@ import top.sharehome.springbootinittemplate.model.dto.admin.AdminAddUserDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminPageUserDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminResetPasswordDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminUpdateInfoDto;
+import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.page.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.admin.AdminExportVo;
 import top.sharehome.springbootinittemplate.model.vo.admin.AdminPageUserVo;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
+import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminPageVo;
 import top.sharehome.springbootinittemplate.service.AdminService;
+import top.sharehome.springbootinittemplate.service.ChartService;
 import top.sharehome.springbootinittemplate.service.OperationService;
 import top.sharehome.springbootinittemplate.utils.document.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
@@ -42,6 +45,9 @@ public class AdminController {
     private AdminService adminService;
 
     @Resource
+    private ChartService chartService;
+
+    @Resource
     private OperationService operationService;
 
     /**
@@ -57,6 +63,20 @@ public class AdminController {
         AuthLoginVo loginUser = LoginUtils.getLoginUser();
         operationService.addOperation(new OperationAddDto("/admin/page", loginUser.getId(), loginUser.getAccount(), "管理员分页查询用户信息"));
         return R.ok(page);
+    }
+
+    /**
+     * 管理员分页查询用户图表信息
+     *
+     * @param adminPageChartDto 分页查询Dto类
+     * @return 分页结果
+     */
+    @PostMapping("/page/chart")
+    public R<Page<ChartAdminPageVo>> pageChart(@RequestBody ChartPageDto adminPageChartDto) {
+        Page<ChartAdminPageVo> chartPage = chartService.pageAdminChart(adminPageChartDto);
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/admin/page/chart", loginUser.getId(), loginUser.getAccount(), "管理员分页查询用户图表信息"));
+        return R.ok(chartPage);
     }
 
     /**
@@ -84,6 +104,20 @@ public class AdminController {
         adminService.deleteUser(id);
         AuthLoginVo loginUser = LoginUtils.getLoginUser();
         operationService.addOperation(new OperationAddDto("/admin/delete/" + id, loginUser.getId(), loginUser.getAccount(), "管理员删除用户" + "[id=" + id + "]"));
+        return R.ok("删除成功");
+    }
+
+    /**
+     * 管理员根据ID删除图表
+     *
+     * @param id 被删除用户的ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete/chart/{id}")
+    public R<String> deleteChart(@PathVariable("id") Long id) {
+        chartService.deleteChart(id);
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/admin/delete/chart/" + id, loginUser.getId(), loginUser.getAccount(), "管理员删除图表" + "[id=" + id + "]"));
         return R.ok("删除成功");
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <v-chart class="chart" :option="option" :loading="chartLoading" />
+  <v-chart class="chart" :option="option" :loading="chartLoading" :style="{height: style.height + 'px'}" />
 </template>
 
 <script>
@@ -34,7 +34,8 @@ import {
   TitleComponent,
   TooltipComponent,
   LegendComponent,
-  GridComponent
+  GridComponent,
+  ToolboxComponent
   // LineChart
 } from 'echarts/components'
 import VChart, { THEME_KEY } from 'vue-echarts'
@@ -69,7 +70,8 @@ use([
   TitleComponent,
   TooltipComponent,
   LegendComponent,
-  GridComponent
+  GridComponent,
+  ToolboxComponent
 ])
 
 export default {
@@ -84,11 +86,18 @@ export default {
     chartOptions: {
       type: String,
       default: '{}'
+    },
+    height: {
+      type: Number,
+      default: 300
     }
   },
   data() {
     return {
-      option: {}
+      option: {},
+      style: {
+        height: 300
+      }
     }
   },
   computed: {
@@ -98,8 +107,21 @@ export default {
       return !this.option || JSON.stringify(this.option) === '{}'
     }
   },
+  watch: {
+    // chartOptions(newVal, oldVal) {
+    //   console.log(111)
+    //   console.log('watch chartOptions', newVal)
+    //   this.updateOptions(newVal)
+    // }
+  },
   mounted() {
-    this.updateOptions()
+    this.option = this.chartOptions
+
+    console.log(this.height)
+    if (this.height) {
+      this.style.height = this.height
+    }
+    this.updateOptions(this.option)
   },
   methods: {
     // json字符串中，包含函数時，使用JSON.parse(strJSON)转换时，定义的字符串函数被识别成普通的字符串。
@@ -110,10 +132,10 @@ export default {
       }
       return value
     },
-    updateOptions() {
-      if (!this.chartOptions) return
+    updateOptions(chartOptions_) {
+      if (!chartOptions_) return
       try {
-        const chartData = JSON.parse(this.chartOptions)
+        const chartData = JSON.parse(chartOptions_)
         // function(k, v) {
         //   if (v.indexOf && v.indexOf('function') > -1) {
         //     return eval('(function(){return ' + v + ' })()')
@@ -132,8 +154,7 @@ export default {
 </script>
 
   <style scoped>
-  .chart {
-    /* height: 400px; */
+  /* .chart {
     height: 300px;
-  }
+  } */
   </style>

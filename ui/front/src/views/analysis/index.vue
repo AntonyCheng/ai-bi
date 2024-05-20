@@ -1,14 +1,14 @@
 <template>
   <div class="analysis-container">
     <div class="analysis-wrapper">
-      <el-form ref="form" class="analysis-form" :model="form" label-width="120px">
-        <el-form-item label="图表名称">
+      <el-form ref="formRef" class="analysis-form" :model="form" :rules="formRules" label-width="120px">
+        <el-form-item label="图表名称" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="分析目标">
+        <el-form-item label="分析目标" prop="goal">
           <el-input v-model="form.goal" />
         </el-form-item>
-        <el-form-item label="图表类型">
+        <el-form-item label="图表类型" prop="chartType">
           <el-select v-model="form.chartType" filterable placeholder="请选择图表类型">
             <el-option
               v-for="item in typeList"
@@ -21,7 +21,7 @@
             <el-radio v-for="item in typeList" :key="item" :label="item">{{ item }}</el-radio>
           </el-radio-group> -->
         </el-form-item>
-        <el-form-item label="图表文件">
+        <el-form-item label="表格文件">
           <el-upload
             class="upload-excel"
             drag
@@ -29,6 +29,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :http-request="submitUpload"
+            :limit="1"
           >
             <i class="el-icon-upload" />
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -40,12 +41,19 @@
           <!-- <el-button @click="onCancel">取消</el-button> -->
         </el-form-item>
       </el-form>
-
       <div v-loading="submitLoading" class="chart-preview">
         <div class="chart-preview-wrapper">
-
           <span v-if="!previewData">预览区</span>
-          <EchartsItem v-else :chart-options="previewData" />
+          <div v-else style="padding: 20px;">
+            <!-- <el-card> -->
+            <EchartsItem :chart-options="previewData" />
+            <div class="history-desc">
+              <!-- <div><span class="title" :title="item.createTime">{{ item.createTime }}</span></div> -->
+              <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
+              <div><span class="genResult" :title="previewText">{{ previewText }}</span></div>
+            </div>
+            <!-- </el-card> -->
+          </div>
         </div>
       </div>
     </div>
@@ -67,30 +75,44 @@ export default {
         file: {}
       },
       submitLoading: false,
+      previewText: '',
       previewData: undefined,
-      typeList: ['折线图', '柱状图', '饼图', '散点图', '地理坐标/地图', 'K 线图', '雷达图', '盒须图', '热力图', '关系图', '路径图', '树图', '矩形树图', '旭日图', '平行坐标系', '桑基图', '漏斗图']
+      // '散点图','地理坐标/地图','K 线图','盒须图','路径图', '平行坐标系', '桑基图',
+      typeList: ['折线图', '柱状图', '饼图', '雷达图', '热力图', '关系图', '树图', '矩形树图', '旭日图', '漏斗图'],
+      formRules: {
+        'name': [{ required: true, trigger: 'blur', message: '图表名称是必填项' }],
+        'goal': [{ required: true, trigger: 'blur', message: '分析目标是必填项' }],
+        'chartType': [{ required: true, trigger: 'blur', message: '图表类型是必填项' }]
+      }
     }
   },
   methods: {
     onSubmit() {
-      this.submitLoading = true
-      this.$message('正在生成中，请注意观察底部预览区')
-      const body = new FormData()
-      console.log('body', body)
-      for (const key in this.form) {
-        body.append(key, this.form[key])
-      }
-      // body.append('file', this.form['file'])
+      this.$refs.formRef.validate(valid => {
+        if (valid) {
+          this.previewData = null
+          this.submitLoading = true
+          this.$message('正在生成中，请注意观察右侧预览区')
+          const body = new FormData()
+          console.log('body', body)
+          for (const key in this.form) {
+            body.append(key, this.form[key])
+          }
+          // body.append('file', this.form['file'])
 
-      ChartGen(body).then((res) => {
-        this.submitLoading = false
-        const data = res.data
-        console.log('res', res)
-        this.previewData = data.genChart
-        this.$message.success('生成成功')
-      }).catch(() => {
-        this.submitLoading = false
-        this.$message.error('生成失败')
+          ChartGen(body).then((res) => {
+            this.submitLoading = false
+            const data = res.data
+            console.log('res', res)
+
+            this.previewText = data.genResult
+            this.previewData = data.genChart
+            this.$message.success('生成成功')
+          }).catch(() => {
+            this.submitLoading = false
+            this.$message.error('生成失败')
+          })
+        }
       })
     },
     onCancel() {
@@ -144,10 +166,19 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/mixin.scss";
+
 .analysis-container{
   padding: 20px;
+
   .analysis-wrapper{
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+
     .analysis-form{
+      flex: 1;
+      padding-right: 20px;
 
       .upload-excel{
         .el-upload{
@@ -160,6 +191,8 @@ export default {
       }
     }
     .chart-preview{
+      flex: 1;
+
       border: 1px dashed #d9d9d9;
       border-radius: 6px;
       cursor: pointer;
@@ -171,10 +204,32 @@ export default {
       }
 
       .chart-preview-wrapper{
-        height: 300px;
+        // height: 300px;
+        height: 100%;
         display: flex;
+        // height: 20px;
         justify-content: center;
         align-items: center;
+
+        .history-desc{
+          // span{
+          //   @include mixin-line-clamp(1);
+          // }
+
+          .title{
+            font-size: 18px;
+            line-height: 24px;
+          }
+          .goal{
+            font-size: 14px;
+            line-height: 24px;
+          }
+          .genResult{
+            font-size: 20px;
+            line-height: 24px;
+            // @include mixin-line-clamp(10);
+          }
+        }
       }
 
     }

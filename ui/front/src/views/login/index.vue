@@ -49,7 +49,7 @@
         </span>
       </el-form-item>
 
-      <el-form-item prop="captcha.code">
+      <el-form-item prop="captcha.code" class="captcha-code-form">
         <span class="svg-container">
           <svg-icon icon-class="example" />
         </span>
@@ -59,13 +59,15 @@
           placeholder="请输入验证码结果"
           name="captcha.code"
           type="text"
-          tabindex="1"
+          tabindex="3"
           auto-complete="on"
-          style="width: 60%"
-        />
-        <span class="code-container">
-          <img alt="captcha.imgBase64" style="width: 140px;height: 50px;margin-top: 12px" :src="imgBase64" @click="getCaptchaBase64">
-        </span>
+        >
+          <template slot="append">
+            <span class="code-container">
+              <img alt="captcha.imgBase64" :src="imgBase64" @click="getCaptchaBase64">
+            </span>
+          </template>
+        </el-input>
       </el-form-item>
 
       <el-button
@@ -254,19 +256,38 @@ $light_gray: #48625d;
     }
   }
 
+  .captcha-code-form{
+
+    .el-input{
+      width: 90%;
+      display: inline-table;
+
+    }
+
+    .code-container {
+      padding-top: 5px;
+      // line-height: 40px;
+      display: inline-block;
+    //padding: 6px 5px 6px 15px;
+    //color: $dark_gray;
+    // vertical-align: middle;
+
+    //width: 30px;
+    img{
+      // width: 140px;
+
+      height: 40px;
+      display: inline-block;
+
+    }
+  }
+  }
+
   .svg-container {
     padding: 6px 5px 6px 15px;
     color: $dark_gray;
     vertical-align: middle;
     width: 30px;
-    display: inline-block;
-  }
-
-  .code-container {
-    //padding: 6px 5px 6px 15px;
-    //color: $dark_gray;
-    vertical-align: middle;
-    //width: 30px;
     display: inline-block;
   }
 

@@ -6,7 +6,10 @@ import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.dto.operation.OperationPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Operation;
 import top.sharehome.springbootinittemplate.model.page.PageModel;
+import top.sharehome.springbootinittemplate.model.vo.operation.OperationExportVo;
 import top.sharehome.springbootinittemplate.model.vo.operation.OperationPageVo;
+
+import java.util.List;
 
 /**
  * 操作服务接口
@@ -36,4 +39,10 @@ public interface OperationService extends IService<Operation> {
      */
     void clearOperation();
 
+    /**
+     * 管理员导出操作日志信息表格
+     *
+     * @return 用户列表结果
+     */
+    List<OperationExportVo> exportExcelList();
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import top.sharehome.springbootinittemplate.common.base.Constants;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.mapper.OperationMapper;
@@ -13,11 +14,13 @@ import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.dto.operation.OperationPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Operation;
 import top.sharehome.springbootinittemplate.model.page.PageModel;
+import top.sharehome.springbootinittemplate.model.vo.operation.OperationExportVo;
 import top.sharehome.springbootinittemplate.model.vo.operation.OperationPageVo;
 import top.sharehome.springbootinittemplate.service.OperationService;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +44,7 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
                 .like(StringUtils.isNotBlank(operationPageDto.getApi()), Operation::getApi, operationPageDto.getApi())
                 .like(StringUtils.isNotBlank(operationPageDto.getUserAccount()), Operation::getUserAccount, operationPageDto.getUserAccount())
                 .like(StringUtils.isNotBlank(operationPageDto.getDescription()), Operation::getDescription, operationPageDto.getDescription());
-        operationLambdaQueryWrapper.orderByAsc(Operation::getCreateTime);
+        operationLambdaQueryWrapper.orderByDesc(Operation::getCreateTime);
 
         operationMapper.selectPage(page, operationLambdaQueryWrapper);
 
@@ -78,6 +81,22 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
         if (deleteResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
+    }
+
+    @Override
+    public List<OperationExportVo> exportExcelList() {
+        List<Operation> usersInDatabase = operationMapper.selectList(null);
+        return usersInDatabase.stream().map(operation -> {
+            OperationExportVo operationExportVo = new OperationExportVo();
+            operationExportVo.setId(operation.getId());
+            operationExportVo.setApi(operation.getApi());
+            operationExportVo.setUserId(operation.getUserId());
+            operationExportVo.setUserAccount(operation.getUserAccount());
+            operationExportVo.setDescription(operation.getDescription());
+            operationExportVo.setCreateTime(operation.getCreateTime());
+            operationExportVo.setUpdateTime(operation.getUpdateTime());
+            return operationExportVo;
+        }).collect(Collectors.toList());
     }
 
 }

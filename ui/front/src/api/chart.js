@@ -18,3 +18,10 @@ export function ChartPage(data) {
     data
   })
 }
+
+export function ChartDelete(data) {
+  return request({
+    url: '/chart/delete/' + data,
+    method: 'delete'
+  })
+}

@@ -8,6 +8,14 @@ export function pageUser(data) {
   })
 }
 
+export function pageChart(data) {
+  return request({
+    url: '/admin/page/chart',
+    method: 'post',
+    data
+  })
+}
+
 export function addUser(data) {
   return request({
     url: '/admin/add',
@@ -19,6 +27,13 @@ export function addUser(data) {
 export function deleteUser(data) {
   return request({
     url: '/admin/delete/' + data,
+    method: 'delete'
+  })
+}
+
+export function deleteChart(data) {
+  return request({
+    url: '/admin/delete/chart/' + data,
     method: 'delete'
   })
 }

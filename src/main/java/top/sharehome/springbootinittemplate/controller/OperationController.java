@@ -13,11 +13,15 @@ import top.sharehome.springbootinittemplate.model.dto.operation.OperationAddDto;
 import top.sharehome.springbootinittemplate.model.dto.operation.OperationPageDto;
 import top.sharehome.springbootinittemplate.model.page.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
+import top.sharehome.springbootinittemplate.model.vo.operation.OperationExportVo;
 import top.sharehome.springbootinittemplate.model.vo.operation.OperationPageVo;
 import top.sharehome.springbootinittemplate.service.OperationService;
+import top.sharehome.springbootinittemplate.utils.document.excel.ExcelUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 操作控制器
@@ -42,8 +46,6 @@ public class OperationController {
      */
     @GetMapping("/page")
     public R<Page<OperationPageVo>> pageOperation(OperationPageDto operationPageDto, PageModel pageModel) {
-        AuthLoginVo loginUser = LoginUtils.getLoginUser();
-        operationService.addOperation(new OperationAddDto("/operation/page", loginUser.getId(), loginUser.getAccount(), "管理员分页查询操作日志信息"));
         Page<OperationPageVo> page = operationService.pageOperation(operationPageDto, pageModel);
         return R.ok(page);
     }
@@ -57,6 +59,18 @@ public class OperationController {
     public R<String> clearOperation() {
         operationService.clearOperation();
         return R.ok("已清空操作记录");
+    }
+
+    /**
+     * 导出操作信息表格
+     *
+     * @return 导出表格
+     */
+    @GetMapping("/export")
+    public R<Void> exportExcel(HttpServletResponse response) {
+        List<OperationExportVo> list = operationService.exportExcelList();
+        ExcelUtils.exportHttpServletResponse(list, "操作日志表", OperationExportVo.class, response);
+        return R.empty();
     }
 
 }

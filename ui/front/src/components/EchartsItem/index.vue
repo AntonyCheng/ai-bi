@@ -108,20 +108,24 @@ export default {
     }
   },
   watch: {
-    // chartOptions(newVal, oldVal) {
-    //   console.log(111)
-    //   console.log('watch chartOptions', newVal)
-    //   this.updateOptions(newVal)
-    // }
+    chartOptions: {
+      handler(newVal, oldVal) {
+        console.log(111)
+        console.log('watch chartOptions', newVal)
+        this.option = this.chartOptions
+        console.log(this.height)
+        this.updateOptions(this.option)
+      },
+      immediate: true
+    }
   },
   mounted() {
-    this.option = this.chartOptions
-
-    console.log(this.height)
+    // this.option = this.chartOptions
+    // console.log(this.height)
     if (this.height) {
       this.style.height = this.height
     }
-    this.updateOptions(this.option)
+    // this.updateOptions(this.option)
   },
   methods: {
     // json字符串中，包含函数時，使用JSON.parse(strJSON)转换时，定义的字符串函数被识别成普通的字符串。

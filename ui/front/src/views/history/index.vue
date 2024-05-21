@@ -12,8 +12,13 @@
                 <!-- <div><span class="genResult" :title="item.genResult">{{ item.genResult }}</span></div> -->
                 <div style="display: flex;justify-content: space-between;">
                   <el-button type="primary" @click.prevent="dialogShowChart(item)">查看详情</el-button>
+                  <el-button type="danger" style="margin-left: -100px" @click="handleDelete(item)">删除图表</el-button>
                   <div style="display: flex;align-items: center;justify-content: flex-end;">
-                    <span class="title" :title="item.createTime" style="text-align: right;font-size:14px;">于{{ item.createTime }}生成</span>
+                    <span
+                      class="title"
+                      :title="item.createTime"
+                      style="text-align: right;font-size:14px;"
+                    >于{{ item.createTime }}生成</span>
                   </div>
                 </div>
               </div>
@@ -59,8 +64,9 @@
 </template>
 
 <script>
-import { ChartPage } from '@/api/chart'
+import { ChartDelete, ChartPage } from '@/api/chart'
 import EchartsItem from '@/components/EchartsItem/index.vue'
+import { Message } from 'element-ui'
 
 export default {
   components: { EchartsItem },
@@ -94,12 +100,10 @@ export default {
     },
     handleSizeChange(val) {
       this.form.size = val
-      console.log('this.form.size', this.form.size)
       this.getData()
     },
     handleCurrentChange(val) {
       this.form.page = val
-      console.log('this.form.page', this.form.page)
       this.getData()
     },
     onSubmit() {
@@ -114,10 +118,19 @@ export default {
     handleClose(done) {
       done()
     },
+    handleDelete(data) {
+      this.$confirm('此操作将删除该图表记录, 是否继续?', '确认删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        ChartDelete(data.id).then(response => {
+          this.getData()
+          Message.success(response.msg)
+        })
+      })
+    },
     dialogShowChart(genChart) {
-      // console.log(1)
-      // this.dialogData.genChart = null
-      console.log('genChart', this.dialogData)
       const noData = {
         genChart: null,
         name: '--',
@@ -125,7 +138,6 @@ export default {
       }
 
       this.dialogData = genChart
-      // console.log('genChart', this.dialogData)
       this.dialogVisible = true
       if (!genChart) {
         this.dialogData = noData
@@ -138,39 +150,42 @@ export default {
 <style lang="scss">
 @import "@/styles/mixin.scss";
 
-.history-container{
+.history-container {
   padding: 20px;
-  .history-wrapper{
 
-    .history-card-main{
+  .history-wrapper {
+
+    .history-card-main {
       display: flex;
       justify-content: center;
 
-      .history-card-wrapper{
+      .history-card-wrapper {
         width: auto;
         flex: 1;
         display: flex;
         justify-content: flex-start;
         flex-wrap: wrap;
 
-        .history-desc{
+        .history-desc {
 
-          .title{
+          .title {
             font-size: 18px;
             line-height: 24px;
           }
-          .goal{
+
+          .goal {
             font-size: 14px;
             line-height: 24px;
           }
-          .genResult{
+
+          .genResult {
             font-size: 12px;
             line-height: 24px;
           }
         }
       }
 
-      .history-card-item{
+      .history-card-item {
         // flex: calc(33% - 20px - 20px);
         // flex-basis: calc(33% - 20px - 20px);
         // max-width: calc(33% - 20px - 20px);
@@ -178,8 +193,8 @@ export default {
         margin-right: 20px;
         margin-bottom: 20px;
 
-        &:nth-child(3n){
-            margin-right: 0px;
+        &:nth-child(3n) {
+          margin-right: 0px;
         }
       }
 
@@ -188,20 +203,22 @@ export default {
   }
 }
 
-.history-desc{
+.history-desc {
 
-          .title{
-            font-size: 18px;
-            line-height: 24px;
-          }
-          .goal{
-            font-size: 14px;
-            line-height: 24px;
-          }
-          .genResult{
-            font-size: 12px;
-            line-height: 24px;
-          }
-        }
+  .title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .goal {
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  .genResult {
+    font-size: 12px;
+    line-height: 24px;
+  }
+}
 </style>
 

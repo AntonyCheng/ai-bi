@@ -110,18 +110,13 @@ export default {
   watch: {
     chartOptions: {
       handler(newVal, oldVal) {
-        console.log(111)
-        console.log('watch chartOptions', newVal)
         this.option = this.chartOptions
-        console.log(this.height)
         this.updateOptions(this.option)
       },
       immediate: true
     }
   },
   mounted() {
-    // this.option = this.chartOptions
-    // console.log(this.height)
     if (this.height) {
       this.style.height = this.height
     }
@@ -147,7 +142,6 @@ export default {
         //   return v
         // }
 
-        // console.log('chartData', chartData)
         this.option = chartData
       } catch (error) {
         console.log(error)

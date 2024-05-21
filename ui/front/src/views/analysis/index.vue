@@ -94,7 +94,6 @@ export default {
           this.submitLoading = true
           this.$message('正在生成中，请注意观察右侧预览区')
           const body = new FormData()
-          console.log('body', body)
           for (const key in this.form) {
             body.append(key, this.form[key])
           }
@@ -103,7 +102,6 @@ export default {
           ChartGen(body).then((res) => {
             this.submitLoading = false
             const data = res.data
-            console.log('res', res)
 
             this.previewText = data.genResult
             this.previewData = data.genChart
@@ -122,7 +120,6 @@ export default {
       })
     },
     beforeAvatarUpload(file) {
-      console.log(file.name.split('.').reverse()[0])
       const suffix = file.name.split('.').reverse()[0]
 
       const suffixFlag = suffix !== 'xls' && suffix !== 'xlsx'
@@ -144,7 +141,6 @@ export default {
     handleAvatarSuccess(response) {
       // dialogForm.value.img_url = URL.createObjectURL(uploadFile.raw!);
       // const result = response
-      // console.log('response', response)
       // const { url } = result
       // 上传图片成功 更新用户信息
       // this.getUserInfo()
@@ -153,10 +149,7 @@ export default {
     },
     // 文件上传
     submitUpload(options) {
-      // console.log(options);
       const { file } = options
-      // const formData =
-      console.log('file', file)
 
       // 存储
       this.form.file = file

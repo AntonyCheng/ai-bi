@@ -281,7 +281,7 @@ export default {
       })
     },
     handleSuccess(response) {
-      console.log('response:', response)
+      // do something
     },
     openDialog(dialogType) {
       this.dialogVisible = true

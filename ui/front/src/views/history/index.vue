@@ -25,7 +25,7 @@
       <el-pagination
         v-if="total !== 0"
         background
-        :page-sizes="[10, 30, 50, 100, 150, 300, 500]"
+        :page-sizes="[6, 12, 30, 60, 120, 360]"
         layout="total, sizes, prev, pager, next, jumper"
         :current-page="form.page"
         :page-size="form.size"
@@ -154,9 +154,6 @@ export default {
         flex-wrap: wrap;
 
         .history-desc{
-          span{
-            @include mixin-line-clamp(1);
-          }
 
           .title{
             font-size: 18px;
@@ -169,7 +166,6 @@ export default {
           .genResult{
             font-size: 12px;
             line-height: 24px;
-            @include mixin-line-clamp(2);
           }
         }
       }
@@ -193,9 +189,6 @@ export default {
 }
 
 .history-desc{
-          span{
-            @include mixin-line-clamp(1);
-          }
 
           .title{
             font-size: 18px;
@@ -208,7 +201,6 @@ export default {
           .genResult{
             font-size: 12px;
             line-height: 24px;
-            @include mixin-line-clamp(2);
           }
         }
 </style>

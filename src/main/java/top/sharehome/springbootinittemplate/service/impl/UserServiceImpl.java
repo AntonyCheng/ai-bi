@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import top.sharehome.springbootinittemplate.common.base.Constants;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
+import top.sharehome.springbootinittemplate.mapper.OperationMapper;
 import top.sharehome.springbootinittemplate.mapper.UserMapper;
+import top.sharehome.springbootinittemplate.model.entity.Operation;
 import top.sharehome.springbootinittemplate.model.entity.User;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
 import top.sharehome.springbootinittemplate.service.UserService;
@@ -35,6 +37,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private OperationMapper operationMapper;
+
     @Override
     @Transactional(rollbackFor = CannotCreateTransactionException.class)
     public void updateAccount(String newAccount) {
@@ -49,6 +54,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userLambdaUpdateWrapper.eq(User::getId, LoginUtils.getLoginUserId());
         int updateResult = userMapper.update(userLambdaUpdateWrapper);
         if (updateResult == 0) {
+            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
+        // 修改日志操作中的账号
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        LambdaUpdateWrapper<Operation> operationLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        operationLambdaUpdateWrapper
+                .eq(Operation::getUserId, loginUser.getId())
+                .set(Operation::getUserAccount, newAccount);
+        int updateOperationResult = operationMapper.update(operationLambdaUpdateWrapper);
+        if (updateOperationResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
         LoginUtils.syncLoginUser();

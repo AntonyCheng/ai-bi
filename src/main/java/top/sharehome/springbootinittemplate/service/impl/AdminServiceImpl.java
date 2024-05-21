@@ -12,11 +12,13 @@ import top.sharehome.springbootinittemplate.common.base.Constants;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeTransactionException;
+import top.sharehome.springbootinittemplate.mapper.OperationMapper;
 import top.sharehome.springbootinittemplate.mapper.UserMapper;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminAddUserDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminPageUserDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminResetPasswordDto;
 import top.sharehome.springbootinittemplate.model.dto.admin.AdminUpdateInfoDto;
+import top.sharehome.springbootinittemplate.model.entity.Operation;
 import top.sharehome.springbootinittemplate.model.entity.User;
 import top.sharehome.springbootinittemplate.model.page.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.admin.AdminExportVo;
@@ -39,6 +41,9 @@ public class AdminServiceImpl extends ServiceImpl<UserMapper, User> implements A
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private OperationMapper operationMapper;
 
     @Override
     @Transactional(readOnly = true, rollbackFor = CustomizeTransactionException.class)
@@ -147,6 +152,17 @@ public class AdminServiceImpl extends ServiceImpl<UserMapper, User> implements A
         int updateResult = userMapper.updateById(user);
         if (updateResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
+        // 修改日志操作中的账号
+        if (!Objects.equals(adminUpdateInfoDto.getAccount(),userInDatabase.getAccount())){
+            LambdaUpdateWrapper<Operation> operationLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            operationLambdaUpdateWrapper
+                    .eq(Operation::getUserId,adminUpdateInfoDto.getId())
+                    .set(Operation::getUserAccount,adminUpdateInfoDto.getAccount());
+            int updateOperationResult = operationMapper.update(operationLambdaUpdateWrapper);
+            if (updateOperationResult==0){
+                throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+            }
         }
         // 用户信息发生修改之后需要重新登陆
         LoginUtils.logout(adminUpdateInfoDto.getId());

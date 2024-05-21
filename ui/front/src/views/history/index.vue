@@ -23,8 +23,10 @@
       </div>
 
       <el-pagination
+        v-if="total !== 0"
         background
-        layout="prev, pager, next"
+        :page-sizes="[10, 30, 50, 100, 150, 300, 500]"
+        layout="total, sizes, prev, pager, next, jumper"
         :current-page="form.page"
         :page-size="form.size"
         :total="total"
@@ -33,13 +35,15 @@
         @current-change="handleCurrentChange"
       />
 
+      <el-empty v-else description="暂无分析数据" />
+
       <el-dialog
         title="图表详情"
         :visible.sync="dialogVisible"
         width="60%"
         :before-close="handleClose"
       >
-        <EchartsItem v-if="dialogData.genChart" :chart-options="dialogData.genChart" />
+        <EchartsItem v-if="dialogData && dialogData.genChart" :chart-options="dialogData.genChart" />
         <div class="history-desc">
           <div><span class="title" :title="dialogData.name">{{ dialogData.name }}</span></div>
           <!-- <div><span class="goal" :title="goal">{{ item.goal }}</span></div> -->
@@ -72,7 +76,7 @@ export default {
         userId: undefined
       },
       dataList: [],
-      total: 10,
+      total: 6,
       // 对话框
       dialogVisible: false,
       dialogData: {}
@@ -86,7 +90,7 @@ export default {
       const result = await ChartPage(this.form)
       const data = result.data
       this.dataList = data.records || []
-      this.total = parseInt(data.total) || 10
+      this.total = parseInt(data.total) || 0
     },
     handleSizeChange(val) {
       this.form.size = val
@@ -112,14 +116,16 @@ export default {
     },
     dialogShowChart(genChart) {
       // console.log(1)
+      // this.dialogData.genChart = null
+      console.log('genChart', this.dialogData)
       const noData = {
         genChart: null,
         name: '--',
         genResult: '--'
       }
+
       this.dialogData = genChart
-      console.log('genChart', genChart)
-      console.log('genChart', genChart)
+      // console.log('genChart', this.dialogData)
       this.dialogVisible = true
       if (!genChart) {
         this.dialogData = noData

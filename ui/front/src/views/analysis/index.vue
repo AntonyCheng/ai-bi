@@ -77,8 +77,8 @@ export default {
       submitLoading: false,
       previewText: '',
       previewData: undefined,
-      // '散点图','地理坐标/地图','K 线图','盒须图','路径图', '平行坐标系', '桑基图',
-      typeList: ['折线图', '柱状图', '饼图', '雷达图', '热力图', '关系图', '树图', '矩形树图', '旭日图', '漏斗图'],
+      // '散点图','地理坐标/地图','K 线图','盒须图','路径图', '平行坐标系', '桑基图', '关系图', '旭日图'
+      typeList: ['折线图', '柱状图', '饼图', '雷达图', '热力图', '树图', '矩形树图', '漏斗图'],
       formRules: {
         'name': [{ required: true, trigger: 'blur', message: '图表名称是必填项' }],
         'goal': [{ required: true, trigger: 'blur', message: '分析目标是必填项' }],

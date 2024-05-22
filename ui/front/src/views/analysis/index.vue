@@ -3,10 +3,10 @@
     <div class="analysis-wrapper">
       <el-form ref="formRef" class="analysis-form" :model="form" :rules="formRules" label-width="120px">
         <el-form-item label="图表名称" prop="name">
-          <el-input placeholder="请输入图表名称" v-model="form.name" />
+          <el-input v-model="form.name" placeholder="请输入图表名称" />
         </el-form-item>
         <el-form-item label="分析目标" prop="goal">
-          <el-input placeholder="请输入分析目标" v-model="form.goal" />
+          <el-input v-model="form.goal" placeholder="请输入分析目标" />
         </el-form-item>
         <el-form-item label="图表类型" prop="chartType">
           <el-select v-model="form.chartType" filterable placeholder="请选择图表类型">

@@ -12,10 +12,12 @@ import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeTransactionException;
 import top.sharehome.springbootinittemplate.mapper.ChartMapper;
+import top.sharehome.springbootinittemplate.mapper.FileMapper;
 import top.sharehome.springbootinittemplate.mapper.UserMapper;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartGenDto;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
+import top.sharehome.springbootinittemplate.model.entity.File;
 import top.sharehome.springbootinittemplate.model.entity.User;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminPageVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
@@ -23,12 +25,16 @@ import top.sharehome.springbootinittemplate.model.vo.chart.ChartUserPageVo;
 import top.sharehome.springbootinittemplate.service.ChartService;
 import top.sharehome.springbootinittemplate.utils.chat.ChatUtils;
 import top.sharehome.springbootinittemplate.utils.excel.ExcelUtils;
+import top.sharehome.springbootinittemplate.utils.oss.minio.MinioUtils;
 import top.sharehome.springbootinittemplate.utils.satoken.LoginUtils;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +57,9 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private FileMapper fileMapper;
 
     @Override
     @Transactional(readOnly = true, rollbackFor = CustomizeTransactionException.class)
@@ -137,6 +146,9 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         }
         String genChart = split[0];
         String genResult = split[1];
+        CompletableFuture.supplyAsync(() -> {
+            return 200;
+        });
         Chart chart = new Chart();
         chart.setName(name);
         chart.setGoal(goal);
@@ -152,6 +164,19 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         ChartGenVo biResponse = new ChartGenVo();
         biResponse.setGenChart(genChart);
         biResponse.setGenResult(genResult);
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        String filePath = "file/" + date;
+        String url = MinioUtils.upload(chartGenDto.getFile(), filePath);
+        File file = new File()
+                .setChartId(chart.getId())
+                .setUserId(LoginUtils.getLoginUserId())
+                .setName(originalFilename)
+                .setSuffix(suffix)
+                .setUrl(url);
+        int insertFileResult = fileMapper.insert(file);
+        if (insertFileResult == 0) {
+            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
+        }
         return biResponse;
     }
 
@@ -166,6 +191,9 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         if (deleteResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
+        LambdaQueryWrapper<File> fileLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        fileLambdaQueryWrapper.eq(File::getChartId, id);
+        fileMapper.delete(fileLambdaQueryWrapper);
     }
 
     @Override
@@ -175,13 +203,16 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         if (Objects.isNull(chartInDatabase)) {
             return;
         }
-        if (!Objects.equals(chartInDatabase.getUserId(),LoginUtils.getLoginUserId())) {
+        if (!Objects.equals(chartInDatabase.getUserId(), LoginUtils.getLoginUserId())) {
             return;
         }
         int deleteResult = chartMapper.deleteById(id);
         if (deleteResult == 0) {
             throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
         }
+        LambdaQueryWrapper<File> fileLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        fileLambdaQueryWrapper.eq(File::getChartId, id);
+        fileMapper.delete(fileLambdaQueryWrapper);
     }
 
 }

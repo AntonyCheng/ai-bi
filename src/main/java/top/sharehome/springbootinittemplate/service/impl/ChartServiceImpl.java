@@ -84,6 +84,7 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
                 lambdaQueryWrapper.in(Chart::getUserId, userIdList);
             }
         }
+        lambdaQueryWrapper.orderByDesc(Chart::getCreateTime);
         chartMapper.selectPage(page, lambdaQueryWrapper);
         List<ChartAdminPageVo> chartAdminPageVoList = page.getRecords().stream().map(chart -> {
             ChartAdminPageVo chartAdminPageVo = new ChartAdminPageVo();

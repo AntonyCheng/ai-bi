@@ -57,7 +57,7 @@
           </template>
           <template>
             <template>
-              <el-button type="success" size="small" style="width: 100px" @click="handleExport">导出文件信息</el-button>
+              <el-button type="success" size="small" style="width: 100px" @click="handleExport">导出图表信息</el-button>
             </template>
           </template>
         </el-collapse-item>
@@ -99,7 +99,7 @@
               @hide="handlePopoverHide"
             >
               <EchartsItem v-if="isPopoverShow" :chart-options="scope.row.genChart" />
-              <el-button slot="reference">click 激活</el-button>
+              <el-button slot="reference" type="primary">详情</el-button>
             </el-popover>
           </template>
         </el-table-column>
@@ -115,6 +115,15 @@
           prop="createTime"
           label="创建时间"
         />
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="150"
+        >
+          <template #default="scope">
+            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </template>
     <template>
@@ -236,7 +245,7 @@ export default {
       })
     },
     handleDelete(data) {
-      this.$confirm('此操作将删除该用户, 是否继续?', '确认删除', {
+      this.$confirm('此操作将删除该图表, 是否继续?', '确认删除', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

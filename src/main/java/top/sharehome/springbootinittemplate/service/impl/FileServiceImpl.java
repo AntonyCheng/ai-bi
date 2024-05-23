@@ -73,6 +73,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
             }
         }
 
+        fileLambdaQueryWrapper.orderByDesc(File::getCreateTime);
         fileMapper.selectPage(page, fileLambdaQueryWrapper);
         List<FilePageVo> filePageVoList = page.getRecords().stream().map(file -> {
             FilePageVo filePageVo = new FilePageVo();

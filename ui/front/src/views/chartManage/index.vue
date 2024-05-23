@@ -92,7 +92,7 @@
         >
           <template #default="scope">
             <el-popover
-              placement="right"
+              placement="left"
               trigger="hover"
               width="400"
               @show="handlePopoverShow"
@@ -143,6 +143,10 @@ export default {
   components: { EchartsItem },
   data() {
     return {
+      isPopoverOpt: {
+        wait: 200,
+        show: false
+      },
       isPopoverShow: false,
       queryLoading: false,
       pageLoading: false,
@@ -275,12 +279,24 @@ export default {
     },
     handlePopoverShow() {
       this.$nextTick(() => {
-        this.isPopoverShow = true
+        if (this.isPopoverShow) {
+          this.isPopoverShow = false
+          setTimeout(() => {
+            this.isPopoverShow = true
+          }, this.isPopoverOpt.wait)
+        } else {
+          this.isPopoverShow = true
+        }
       })
     },
     handlePopoverHide() {
       this.$nextTick(() => {
         this.isPopoverShow = false
+
+        // this.isPopoverShow = false
+        // setTimeout(() => {
+        //   this.isPopoverShow = true
+        // }, this.isPopoverOpt.wait)
       })
     }
   }

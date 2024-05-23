@@ -258,7 +258,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { addUser, deleteUser, exportExcel, pageUser, resetPassword, updateInfo, updateState } from '@/api/admin'
+import { addUser, deleteUser, exportExcelUser, pageUser, resetPassword, updateInfo, updateState } from '@/api/admin'
 import { Loading, Message } from 'element-ui'
 
 export default {
@@ -368,7 +368,7 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      exportExcel().then(async data => {
+      exportExcelUser().then(async data => {
         if (data) {
           const blob = new Blob([data.data])
           const url = URL.createObjectURL(blob)

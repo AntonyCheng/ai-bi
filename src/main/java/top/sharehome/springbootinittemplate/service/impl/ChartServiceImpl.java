@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.sharehome.springbootinittemplate.common.base.Constants;
 import top.sharehome.springbootinittemplate.common.base.ReturnCode;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeReturnException;
 import top.sharehome.springbootinittemplate.exception.customize.CustomizeTransactionException;
@@ -19,6 +20,8 @@ import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
 import top.sharehome.springbootinittemplate.model.entity.File;
 import top.sharehome.springbootinittemplate.model.entity.User;
+import top.sharehome.springbootinittemplate.model.vo.admin.AdminExportVo;
+import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminExportVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminPageVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartUserPageVo;
@@ -216,6 +219,25 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         LambdaQueryWrapper<File> fileLambdaQueryWrapper = new LambdaQueryWrapper<>();
         fileLambdaQueryWrapper.eq(File::getChartId, id);
         fileMapper.delete(fileLambdaQueryWrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = CustomizeTransactionException.class)
+    public List<ChartAdminExportVo> exportExcelList() {
+        List<Chart> chartsInDatabase = chartMapper.selectList(null);
+        return chartsInDatabase.stream().map(chart -> {
+            ChartAdminExportVo chartAdminExportVo = new ChartAdminExportVo();
+            chartAdminExportVo.setId(chart.getId());
+            chartAdminExportVo.setName(chart.getName());
+            chartAdminExportVo.setGoal(chart.getGoal());
+            chartAdminExportVo.setType(chart.getType());
+            chartAdminExportVo.setGenChart(chart.getGenChart());
+            chartAdminExportVo.setGenResult(chart.getGenResult());
+            chartAdminExportVo.setUserAccount(userMapper.selectById(chart.getUserId()).getAccount());
+            chartAdminExportVo.setCreateTime(chart.getCreateTime());
+            chartAdminExportVo.setUpdateTime(chart.getUpdateTime());
+            return chartAdminExportVo;
+        }).collect(Collectors.toList());
     }
 
 }

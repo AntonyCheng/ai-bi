@@ -61,9 +61,18 @@ export function resetPassword(data) {
   })
 }
 
-export function exportExcel() {
+export function exportExcelUser() {
   return request({
-    url: '/admin/export',
+    url: '/admin/export/user',
+    method: 'get',
+    // 后端传来二进制流是需要修改为blob类型
+    responseType: 'blob'
+  })
+}
+
+export function exportExcelChart() {
+  return request({
+    url: '/admin/export/chart',
     method: 'get',
     // 后端传来二进制流是需要修改为blob类型
     responseType: 'blob'

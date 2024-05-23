@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 分页查询文件信息Vo类
+ * 导出文件信息Vo类
  *
  * @author AntonyCheng
  */

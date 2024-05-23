@@ -19,6 +19,7 @@ import top.sharehome.springbootinittemplate.model.page.PageModel;
 import top.sharehome.springbootinittemplate.model.vo.admin.AdminExportVo;
 import top.sharehome.springbootinittemplate.model.vo.admin.AdminPageUserVo;
 import top.sharehome.springbootinittemplate.model.vo.auth.AuthLoginVo;
+import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminExportVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminPageVo;
 import top.sharehome.springbootinittemplate.service.AdminService;
 import top.sharehome.springbootinittemplate.service.ChartService;
@@ -168,12 +169,26 @@ public class AdminController {
      *
      * @return 导出表格
      */
-    @GetMapping("/export")
-    public R<Void> exportExcel(HttpServletResponse response) {
+    @GetMapping("/export/user")
+    public R<Void> exportUserExcel(HttpServletResponse response) {
         List<AdminExportVo> list = adminService.exportExcelList();
         ExcelUtils.exportHttpServletResponse(list, "用户表", AdminExportVo.class, response);
         AuthLoginVo loginUser = LoginUtils.getLoginUser();
-        operationService.addOperation(new OperationAddDto("/admin/export", loginUser.getId(), loginUser.getAccount(), "导出用户表格"));
+        operationService.addOperation(new OperationAddDto("/admin/export/user", loginUser.getId(), loginUser.getAccount(), "导出用户表格"));
+        return R.empty();
+    }
+
+    /**
+     * 导出图表表格
+     *
+     * @return 导出表格
+     */
+    @GetMapping("/export/chart")
+    public R<Void> exportChartExcel(HttpServletResponse response) {
+        List<ChartAdminExportVo> list = chartService.exportExcelList();
+        ExcelUtils.exportHttpServletResponse(list, "图表信息表", ChartAdminExportVo.class, response);
+        AuthLoginVo loginUser = LoginUtils.getLoginUser();
+        operationService.addOperation(new OperationAddDto("/admin/export/chart", loginUser.getId(), loginUser.getAccount(), "导出图表信息表"));
         return R.empty();
     }
 

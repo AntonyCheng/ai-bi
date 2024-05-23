@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartGenDto;
 import top.sharehome.springbootinittemplate.model.dto.chart.ChartPageDto;
 import top.sharehome.springbootinittemplate.model.entity.Chart;
+import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminExportVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartAdminPageVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartGenVo;
 import top.sharehome.springbootinittemplate.model.vo.chart.ChartUserPageVo;
+
+import java.util.List;
 
 /**
  * 图表服务接口
@@ -50,4 +53,11 @@ public interface ChartService extends IService<Chart> {
      * @param id 被删除用户的ID
      */
     void deleteUserChart(Long id);
+
+    /**
+     * 导出图表表格
+     *
+     * @return 导出表格
+     */
+    List<ChartAdminExportVo> exportExcelList();
 }

@@ -18,16 +18,16 @@
                     label-width="80px"
                   >
                     <el-form-item label="图表名称">
-                      <el-input v-model="queryForm.name" placeholder="请输入图表名称" style="width: 200px"/>
+                      <el-input v-model="queryForm.name" placeholder="请输入图表名称" style="width: 200px" />
                     </el-form-item>
                     <el-form-item label="分析目标">
-                      <el-input v-model="queryForm.goal" placeholder="请输入分析目标" style="width: 200px"/>
+                      <el-input v-model="queryForm.goal" placeholder="请输入分析目标" style="width: 200px" />
                     </el-form-item>
                     <el-form-item label="图表类型">
-                      <el-input v-model="queryForm.chartType" placeholder="请输入图表类型" style="width: 200px"/>
+                      <el-input v-model="queryForm.chartType" placeholder="请输入图表类型" style="width: 200px" />
                     </el-form-item>
                     <el-form-item label="用户账号">
-                      <el-input v-model="queryForm.userAccount" placeholder="请输入用户账号" style="width: 200px"/>
+                      <el-input v-model="queryForm.userAccount" placeholder="请输入用户账号" style="width: 200px" />
                     </el-form-item>
                   </el-form>
                 </el-col>
@@ -93,9 +93,12 @@
           <template #default="scope">
             <el-popover
               placement="right"
+              trigger="hover"
               width="400"
-              trigger="click">
-              <EchartsItem  :chart-options="scope.row.genChart"/>
+              @show="handlePopoverShow"
+              @hide="handlePopoverHide"
+            >
+              <EchartsItem v-if="isPopoverShow" :chart-options="scope.row.genChart" />
               <el-button slot="reference">click 激活</el-button>
             </el-popover>
           </template>
@@ -130,16 +133,17 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import {pageChart, exportExcelChart, deleteChart} from '@/api/admin'
-import {Loading, Message} from 'element-ui'
+import { mapGetters } from 'vuex'
+import { pageChart, exportExcelChart, deleteChart } from '@/api/admin'
+import { Loading, Message } from 'element-ui'
 import EchartsItem from '@/components/EchartsItem/index.vue'
 
 export default {
   name: 'ChartManage',
-  components: {EchartsItem},
+  components: { EchartsItem },
   data() {
     return {
+      isPopoverShow: false,
       queryLoading: false,
       pageLoading: false,
       queryResult: [],
@@ -268,6 +272,16 @@ export default {
       this.queryForm.chartType = undefined
       this.queryForm.userAccount = undefined
       this.queryForm.page = 1
+    },
+    handlePopoverShow() {
+      this.$nextTick(() => {
+        this.isPopoverShow = true
+      })
+    },
+    handlePopoverHide() {
+      this.$nextTick(() => {
+        this.isPopoverShow = false
+      })
     }
   }
 }

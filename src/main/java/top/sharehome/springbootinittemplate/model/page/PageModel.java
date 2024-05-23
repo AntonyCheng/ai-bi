@@ -56,7 +56,7 @@ public class PageModel implements Serializable {
      * @param <T> 分页泛型
      * @return 构建结果
      */
-    public <T> Page<T> build() {
+    public <T> Page<T> build(Class<T> clazz) {
         Boolean allowDeep = ObjectUtils.defaultIfNull(getAllowDeep(),DEFAULT_ALLOW_DEEP);
         Integer page = ObjectUtils.defaultIfNull(getPage(), DEFAULT_PAGE);
         Integer size = allowDeep ?
@@ -64,7 +64,7 @@ public class PageModel implements Serializable {
         if (page <= 0) {
             page = DEFAULT_PAGE;
         }
-        return new Page<T>(page, size);
+        return new Page<>(page, size);
     }
 
     private static final long serialVersionUID = -7445813604888145436L;

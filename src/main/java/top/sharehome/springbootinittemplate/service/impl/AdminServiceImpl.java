@@ -48,8 +48,8 @@ public class AdminServiceImpl extends ServiceImpl<UserMapper, User> implements A
     @Override
     @Transactional(readOnly = true, rollbackFor = CustomizeTransactionException.class)
     public Page<AdminPageUserVo> pageUser(AdminPageUserDto adminPageUserDto, PageModel pageModel) {
-        Page<User> page = pageModel.build();
-        Page<AdminPageUserVo> res = pageModel.build();
+        Page<User> page = pageModel.build(User.class);
+        Page<AdminPageUserVo> res = pageModel.build(AdminPageUserVo.class);
 
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         // 构造查询条件

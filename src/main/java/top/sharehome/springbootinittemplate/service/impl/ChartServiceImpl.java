@@ -71,13 +71,16 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart> implements
         lambdaQueryWrapper.like(StringUtils.isNotBlank(chartPageDto.getGoal()), Chart::getGoal, chartPageDto.getGoal());
         lambdaQueryWrapper.like(StringUtils.isNotBlank(chartPageDto.getName()), Chart::getName, chartPageDto.getName());
         lambdaQueryWrapper.like(StringUtils.isNotBlank(chartPageDto.getChartType()), Chart::getType, chartPageDto.getChartType());
-        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        userLambdaQueryWrapper.like(User::getAccount, chartPageDto.getUserAccount());
-        List<Long> userIdList = userMapper.selectList(userLambdaQueryWrapper).stream().map(User::getId).collect(Collectors.toList());
-        if (StringUtils.isNotEmpty(chartPageDto.getUserAccount()) && userIdList.isEmpty()) {
-            return new Page<>(chartPageDto.getPage(), chartPageDto.getSize());
+        if (StringUtils.isNotBlank(chartPageDto.getUserAccount())) {
+            LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            userLambdaQueryWrapper.like(User::getAccount, chartPageDto.getUserAccount());
+            List<Long> userIdList = userMapper.selectList(userLambdaQueryWrapper).stream().map(User::getId).collect(Collectors.toList());
+            if (userIdList.isEmpty()) {
+                return new Page<>(chartPageDto.getPage(), chartPageDto.getSize());
+            } else {
+                lambdaQueryWrapper.in(Chart::getUserId, userIdList);
+            }
         }
-        lambdaQueryWrapper.in(!userIdList.isEmpty(), Chart::getUserId, userIdList);
         chartMapper.selectPage(page, lambdaQueryWrapper);
         List<ChartAdminPageVo> chartAdminPageVoList = page.getRecords().stream().map(chart -> {
             ChartAdminPageVo chartAdminPageVo = new ChartAdminPageVo();

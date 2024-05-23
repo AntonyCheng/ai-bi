@@ -1,4 +1,4 @@
-package top.sharehome.springbootinittemplate.model.vo.operation;
+package top.sharehome.springbootinittemplate.model.vo.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,38 +17,43 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class OperationPageVo implements Serializable {
+public class FilePageVo implements Serializable {
 
     /**
-     * 操作ID
+     * ID
      */
     private Long id;
 
     /**
-     * 操作接口
+     * 文件名称
      */
-    private String api;
+    private String name;
 
     /**
-     * 操作人ID
+     * 文件地址
      */
-    private Long userId;
+    private String url;
 
     /**
-     * 操作人账号
+     * 文件格式
+     */
+    private String suffix;
+
+    /**
+     * 用户账号
      */
     private String userAccount;
 
     /**
-     * 操作描述
+     * 图表名称
      */
-    private String description;
+    private String chartName;
 
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
 
-    private static final long serialVersionUID = 7106304080691772434L;
+    private static final long serialVersionUID = -374282262791773450L;
 
 }

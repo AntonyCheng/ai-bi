@@ -36,8 +36,8 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
 
     @Override
     public Page<OperationPageVo> pageOperation(OperationPageDto operationPageDto, PageModel pageModel) {
-        Page<Operation> page = pageModel.build();
-        Page<OperationPageVo> res = pageModel.build();
+        Page<Operation> page = pageModel.build(Operation.class);
+        Page<OperationPageVo> res = pageModel.build(OperationPageVo.class);
 
         LambdaQueryWrapper<Operation> operationLambdaQueryWrapper = new LambdaQueryWrapper<>();
         operationLambdaQueryWrapper

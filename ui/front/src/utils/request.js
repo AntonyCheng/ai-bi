@@ -32,7 +32,8 @@ service.interceptors.request.use(
 
 const RESPONSE_URI_WHITE_LIST = [
   '/admin/export',
-  '/operation/export'
+  '/operation/export',
+  '/file/export'
 ]
 
 // response interceptor

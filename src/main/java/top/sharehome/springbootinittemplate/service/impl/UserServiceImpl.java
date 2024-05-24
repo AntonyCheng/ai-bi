@@ -62,10 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         operationLambdaUpdateWrapper
                 .eq(Operation::getUserId, loginUser.getId())
                 .set(Operation::getUserAccount, newAccount);
-        int updateOperationResult = operationMapper.update(operationLambdaUpdateWrapper);
-        if (updateOperationResult == 0) {
-            throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
-        }
+        operationMapper.update(operationLambdaUpdateWrapper);
         LoginUtils.syncLoginUser();
     }
 

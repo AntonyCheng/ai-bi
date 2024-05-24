@@ -159,10 +159,7 @@ public class AdminServiceImpl extends ServiceImpl<UserMapper, User> implements A
             operationLambdaUpdateWrapper
                     .eq(Operation::getUserId,adminUpdateInfoDto.getId())
                     .set(Operation::getUserAccount,adminUpdateInfoDto.getAccount());
-            int updateOperationResult = operationMapper.update(operationLambdaUpdateWrapper);
-            if (updateOperationResult==0){
-                throw new CustomizeReturnException(ReturnCode.ERRORS_OCCURRED_IN_THE_DATABASE_SERVICE);
-            }
+            operationMapper.update(operationLambdaUpdateWrapper);
         }
         // 用户信息发生修改之后需要重新登陆
         LoginUtils.logout(adminUpdateInfoDto.getId());
